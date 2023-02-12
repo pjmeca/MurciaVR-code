@@ -36,6 +36,8 @@ public class OVRGrabbable : MonoBehaviour
     protected Transform m_snapOffset;
     [SerializeField]
     protected Collider[] m_grabPoints = null;
+    
+    Collider cuerpo;  // el cuerpo del jugador para que no colisione el objeto agarrado
 
     protected bool m_grabbedKinematic = false;
     protected Collider m_grabbedCollider = null;
@@ -121,6 +123,10 @@ public class OVRGrabbable : MonoBehaviour
         m_grabbedBy = hand;
         m_grabbedCollider = grabPoint;
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
+        Physics.IgnoreCollision(cuerpo, GetComponent<Collider>(), true); // cuando agarramos un objeto, ignoramos
+                                                                         // las colisiones para que, si el jugador lo
+                                                                         // acerca a su cuerpo, no lo desplace
     }
 
 	/// <summary>
@@ -134,6 +140,9 @@ public class OVRGrabbable : MonoBehaviour
         rb.angularVelocity = angularVelocity;
         m_grabbedBy = null;
         m_grabbedCollider = null;
+
+        Physics.IgnoreCollision(cuerpo, GetComponent<Collider>(), false); // cuando suelta el objeto, reestablecemos
+                                                                          // las colisiones
     }
 
     void Awake()
@@ -155,6 +164,8 @@ public class OVRGrabbable : MonoBehaviour
     protected virtual void Start()
     {
         m_grabbedKinematic = GetComponent<Rigidbody>().isKinematic;
+
+        cuerpo = GameObject.Find("Cuerpo").GetComponent<CapsuleCollider>(); // busca automáticamente el objeto "Cuerpo"
     }
 
     void OnDestroy()
