@@ -5,7 +5,8 @@ using OVR;
 
 public class JoystickLocomotion : MonoBehaviour
 {
-    public Rigidbody player;
+    public GameObject player;
+    private Rigidbody playerRB;
     public float speed;
     public enum tipoMovimiento
     {
@@ -16,7 +17,7 @@ public class JoystickLocomotion : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerRB = player.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -33,16 +34,16 @@ public class JoystickLocomotion : MonoBehaviour
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.LTouch);
 
-        player.position += (transform.right * joystickAxis.x + transform.forward * joystickAxis.y) * Time.deltaTime * speed;
+        playerRB.position += (transform.right * joystickAxis.x + transform.forward * joystickAxis.y) * Time.deltaTime * speed;
 
-        float fixedY = player.position.y;
-        player.position = new Vector3(player.position.x, fixedY,player.position.z); // para no volar
+        float fixedY = playerRB.position.y;
+        playerRB.position = new Vector3(playerRB.position.x, fixedY,playerRB.position.z); // para no volar
     }
 
     void rotar()
     {
-        var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.LTouch);
+        var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
-        player.transform.eulerAngles -= (transform.right * joystickAxis.x + transform.forward * joystickAxis.y) * Time.deltaTime * speed;
+        player.transform.Rotate(new Vector3(0, joystickAxis.x, 0) * Time.deltaTime * speed, Space.World);
     }
 }
