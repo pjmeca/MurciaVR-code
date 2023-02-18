@@ -30,20 +30,22 @@ public class JoystickLocomotion : MonoBehaviour
             rotar();
     }
 
+    // https://www.youtube.com/watch?v=rwGv1rmm1kQ
     void caminar()
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.LTouch);
 
-        playerRB.position += (transform.right * joystickAxis.x + transform.forward * joystickAxis.y) * Time.deltaTime * speed;
-
         float fixedY = playerRB.position.y;
-        playerRB.position = new Vector3(playerRB.position.x, fixedY,playerRB.position.z); // para no volar
+
+        playerRB.position += speed * Time.deltaTime * (transform.right * joystickAxis.x + transform.forward * joystickAxis.y);
+
+        playerRB.position = new Vector3(playerRB.position.x, fixedY, playerRB.position.z); // para no volar
     }
 
     void rotar()
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
-        player.transform.Rotate(new Vector3(0, joystickAxis.x, 0) * Time.deltaTime * speed, Space.World);
+        player.transform.Rotate(speed * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
     }
 }

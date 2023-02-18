@@ -12,7 +12,7 @@ using Microsoft.Geospatial;
 public class MovimientoCiudad : MonoBehaviour
 {
     public GameObject jugador;
-    private float velocidad;
+    public float velocidad;
     [SerializeField]
     public MapRenderer mapRenderer;
 
@@ -31,7 +31,7 @@ public class MovimientoCiudad : MonoBehaviour
     void Update()
     {
         // Comprobaciones previas
-        ActualizarVelocidad();
+        //ActualizarVelocidad();
 
         // Obtener la posición del jugador
         var posX = jugador.transform.position.x;
@@ -41,6 +41,8 @@ public class MovimientoCiudad : MonoBehaviour
         var difX = posX - transform.position.x;
         var difZ = posZ - transform.position.z;
 
+        //Debug.Log("posX: "+posX + " posZ: "+posZ+" difX:" + difX+" difZ:"+difZ);
+
         // Mover el centro del mapa a esa posición
         var temp = new Vector3(posX, transform.position.y, posZ);
         transform.position = temp;
@@ -48,20 +50,21 @@ public class MovimientoCiudad : MonoBehaviour
         // Actualizar las coordenadas del mapa para mostrar el desplazamiento
         var zoom = mapRenderer.ZoomLevel;
         MapChanger(
-            (float)(mapRenderer.Center.LatitudeInDegrees + difZ * precision * Time.deltaTime * velocidad), 
-            (float)(mapRenderer.Center.LongitudeInDegrees + difX * precision * Time.deltaTime * velocidad), 
+            mapRenderer.Center.LatitudeInDegrees + difZ * precision * Time.deltaTime * velocidad,    // latitud: -90 a 90
+            mapRenderer.Center.LongitudeInDegrees + (difX * precision * Time.deltaTime * velocidad)*1.3, // longitud: -180 a 180
             zoom);
     }
 
+    /*
     // Actualiza el valor de la velocidad de movimiento del jugador
     public void ActualizarVelocidad()
     {
         Transform childTrans = jugador.transform.FindChildRecursive("LeftHandAnchor");
         velocidad = childTrans.gameObject.GetComponent<JoystickLocomotion>().speed;
-    }
+    }*/
 
-    // https://seirios48.medium.com/whats-is-microsoft-map-sdk-can-6a7521be3c32
-    public void MapChanger(float lat, float lon, float zoom)
+    // Basado en: https://seirios48.medium.com/whats-is-microsoft-map-sdk-can-6a7521be3c32
+    public void MapChanger(double lat, double lon, float zoom)
     {
         mapRenderer.SetMapScene(new MapSceneOfLocationAndZoomLevel(new LatLon(lat, lon), zoom), MapSceneAnimationKind.None);
     }

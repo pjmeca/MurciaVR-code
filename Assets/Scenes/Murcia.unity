@@ -490,6 +490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jugador: {fileID: 271257733}
+  velocidad: 2.5
   mapRenderer: {fileID: 1167618407}
   precision: 0.000135
 --- !u!1001 &1316056658
@@ -568,7 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 271257733}
-  speed: 4
+  speed: 7
   dropDown: 0
 --- !u!1001 &1550203000
 PrefabInstance:
