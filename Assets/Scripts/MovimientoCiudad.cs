@@ -12,12 +12,14 @@ using Microsoft.Geospatial;
 public class MovimientoCiudad : MonoBehaviour
 {
     public GameObject jugador;
-    public float velocidad;
+
     [SerializeField]
     public MapRenderer mapRenderer;
 
-    //[Range(0.00001f, 0.005f)]
-    public float precision = 0.0001f;
+    // Perímetro máximo dentro del cual no se actualizará la posición del mapa
+    [Range(0, 500)]
+    public float perimetro = 100;
+    private float difX = 0, difZ = 0;
 
     void Start()
     {
@@ -30,38 +32,40 @@ public class MovimientoCiudad : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Comprobaciones previas
-        //ActualizarVelocidad();
-
         // Obtener la posición del jugador
         var posX = jugador.transform.position.x;
         var posZ = jugador.transform.position.z;
 
         // Calcular la diferencia respecto a la última posición
-        var difX = posX - transform.position.x;
-        var difZ = posZ - transform.position.z;
+        difX += posX - transform.position.x;
+        difZ += posZ - transform.position.z;
 
         //Debug.Log("posX: "+posX + " posZ: "+posZ+" difX:" + difX+" difZ:"+difZ);
 
+        // Comprobar si se ha salido del perímetro
+        if(!(Mathf.Abs(difX) < perimetro || Mathf.Abs(difZ) < perimetro))
+        {
+            // Mover el mapa
+            MoverMapa(posX, posZ);
+
+            // Reestablecer los acumuladores
+            difX = difZ = 0;
+        }
+    }
+
+    // Actualiza la posición del mapa
+    public void MoverMapa(float posX, float posZ)
+    {
         // Mover el centro del mapa a esa posición
         var temp = new Vector3(posX, transform.position.y, posZ);
+        var latLon = mapRenderer.TransformWorldPointToLatLon(temp); // IMPORTANTE HACERLO ANTES DE MOVERLO
+                                                                    // traduce de forma relativa: (0,0,0) -> transform.position
         transform.position = temp;
 
         // Actualizar las coordenadas del mapa para mostrar el desplazamiento
         var zoom = mapRenderer.ZoomLevel;
-        MapChanger(
-            mapRenderer.Center.LatitudeInDegrees + difZ * precision * Time.deltaTime * velocidad,    // latitud: -90 a 90
-            mapRenderer.Center.LongitudeInDegrees + (difX * precision * Time.deltaTime * velocidad)*1.3, // longitud: -180 a 180
-            zoom);
+        MapChanger(latLon.LatitudeInDegrees, latLon.LongitudeInDegrees, zoom);
     }
-
-    /*
-    // Actualiza el valor de la velocidad de movimiento del jugador
-    public void ActualizarVelocidad()
-    {
-        Transform childTrans = jugador.transform.FindChildRecursive("LeftHandAnchor");
-        velocidad = childTrans.gameObject.GetComponent<JoystickLocomotion>().speed;
-    }*/
 
     // Basado en: https://seirios48.medium.com/whats-is-microsoft-map-sdk-can-6a7521be3c32
     public void MapChanger(double lat, double lon, float zoom)
