@@ -12,6 +12,7 @@ using Microsoft.Geospatial;
 public class MovimientoCiudad : MonoBehaviour
 {
     public GameObject jugador;
+    public GameObject Niebla;
 
     [SerializeField]
     public MapRenderer mapRenderer;
@@ -51,6 +52,9 @@ public class MovimientoCiudad : MonoBehaviour
             // Reestablecer los acumuladores
             difX = difZ = 0;
         }
+
+        // En cualquier caso, mover la niebla con el jugador
+        Niebla.transform.position = new Vector3(posX, transform.position.y, posZ);
     }
 
     // Actualiza la posición del mapa
