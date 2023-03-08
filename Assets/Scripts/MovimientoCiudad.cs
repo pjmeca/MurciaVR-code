@@ -64,6 +64,7 @@ public class MovimientoCiudad : MonoBehaviour
         var temp = new Vector3(posX, transform.position.y, posZ);
         var latLon = mapRenderer.TransformWorldPointToLatLon(temp); // IMPORTANTE HACERLO ANTES DE MOVERLO
                                                                     // traduce de forma relativa: (0,0,0) -> transform.position
+
         transform.position = temp;
 
         // Actualizar las coordenadas del mapa para mostrar el desplazamiento
