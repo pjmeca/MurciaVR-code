@@ -12,6 +12,8 @@ Material:
   m_ValidKeywords:
   - _ALPHABLEND_ON
   - _EMISSION
+  - _GLOSSYREFLECTIONS_OFF
+  - _SPECULARHIGHLIGHTS_OFF
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
@@ -66,18 +68,18 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
     - _GlossMapScale: 1
-    - _Glossiness: 0.906
-    - _GlossyReflections: 1
-    - _Metallic: 0.267
+    - _Glossiness: 0.571
+    - _GlossyReflections: 0
+    - _Metallic: 1
     - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
-    - _SpecularHighlights: 1
+    - _SpecularHighlights: 0
     - _SrcBlend: 5
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
-    - _EmissionColor: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
+    - _Color: {r: 0.41799998, g: 0.41799998, b: 0.41799998, a: 0.9607843}
+    - _EmissionColor: {r: 0.45490196, g: 0.45490196, b: 0.45490196, a: 1}
   m_BuildTextureStacks: []
