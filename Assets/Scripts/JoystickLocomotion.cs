@@ -31,6 +31,17 @@ public class JoystickLocomotion : MonoBehaviour
     private float nuevaPosX, nuevaPosY, nuevaPosZ;
     private string json;
 
+    [Header("Zona muerta Joystick Derecho")]
+    [Range(0, 1)]
+    public float zonaMuertaRotar = 0.5f;
+    [Range(0, 1)]
+    public float zonaMuertaVolar = 0.5f;
+
+    [Header("Límites de altura")]
+    public float alturaMinima = 0;
+    public float alturaMaxima = 20; 
+    private float ultimaAltitud = 0; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,7 +85,8 @@ public class JoystickLocomotion : MonoBehaviour
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
-        transform.Rotate(velocidadRotar * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
+        if(Mathf.Abs(joystickAxis.x) >= zonaMuertaRotar)
+            transform.Rotate(velocidadRotar * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
     }
 
     void volar()
@@ -86,7 +98,10 @@ public class JoystickLocomotion : MonoBehaviour
         {
             var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
-            ajusteVuelo = velocidad * Time.deltaTime * joystickAxis.y;
+            if (Mathf.Abs(joystickAxis.y) >= zonaMuertaVolar)
+                ajusteVuelo = velocidad * Time.deltaTime * joystickAxis.y;
+            else
+                ajusteVuelo = 0;
         }
     }
 
@@ -102,7 +117,10 @@ public class JoystickLocomotion : MonoBehaviour
         else
         {
             // Aplicamos el vuelo
+            // Las alturas se miden en base a la última altitud calculada para evitar problemas (p.ej. con las montañas)
             nuevaPosY += ajusteVuelo;
+            nuevaPosY = nuevaPosY > (ultimaAltitud+alturaMaxima) ? ultimaAltitud+alturaMaxima : nuevaPosY;   
+            nuevaPosY = nuevaPosY < alturaMinima ? alturaMinima : nuevaPosY;
         }
     }
 
@@ -150,7 +168,8 @@ public class JoystickLocomotion : MonoBehaviour
 
         // Actualizar la posición del jugador en base a la altitud
         float escala = transform.Find("Cuerpo").localScale.y;
-        float posY = altitud / escala + (ajuste + (53 - altitud) * Mathf.Abs(ajuste / 4)); // 53 es la altitud tomada como base en la plaza de la Catedral
+        float posY = altitud / escala + ajuste;
+        ultimaAltitud = posY;
         nuevaPosY = posY;
     }
 }
