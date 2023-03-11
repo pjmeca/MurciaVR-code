@@ -54,7 +54,8 @@ public class MovimientoCiudad : MonoBehaviour
         }
 
         // En cualquier caso, mover la niebla con el jugador
-        Niebla.transform.position = new Vector3(posX, transform.position.y, posZ);
+        if(Niebla != null) 
+            Niebla.transform.position = new Vector3(posX, transform.position.y, posZ);
     }
 
     // Actualiza la posición del mapa
