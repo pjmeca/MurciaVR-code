@@ -14,27 +14,18 @@ public class BodyCollision : MonoBehaviour
     [SerializeField]
     public List<GameObject> ignorarColisiones;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Para que las manos no colisionen con el cuerpo, necesitamos ignorar todos las colisiones con este
-        foreach (GameObject o in ignorarColisiones)
-        {
-            foreach (Collider c in o.transform.GetComponentsInChildren<Collider>())
-                Physics.IgnoreCollision(c, GetComponent<Collider>(), true);
-            
-        }
-    }
-
     // Update is called once per frame
     void Update()
     {
-        foreach (GameObject o in ignorarColisiones)
+        if(Time.frameCount == 1)
         {
-            foreach (Collider c in o.transform.GetComponentsInChildren<Collider>())
-                Physics.IgnoreCollision(c, GetComponent<Collider>(), true);
+            foreach (GameObject o in ignorarColisiones)
+            {
+                foreach (Collider c in o.transform.GetComponentsInChildren<Collider>())
+                    Physics.IgnoreCollision(c, GetComponent<Collider>(), true);
 
-        }
+            }
+        }        
 
         gameObject.transform.position = new Vector3(cabeza.position.x, pies.position.y, cabeza.position.z);
     }
