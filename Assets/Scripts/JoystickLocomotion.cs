@@ -46,7 +46,7 @@ public class JoystickLocomotion : MonoBehaviour
     void Start()
     {
         playerRB = GetComponent<Rigidbody>();
-        gravityActiveState = GetComponent<Rigidbody>().useGravity;
+        gravityActiveState = playerRB.useGravity;
 
         posX = ultimaPosX = nuevaPosX = playerRB.transform.position.x;
         posY = ultimaPosY = nuevaPosY = playerRB.transform.position.y;
@@ -126,6 +126,8 @@ public class JoystickLocomotion : MonoBehaviour
 
     void actualizarPosicion(float posX, float posZ)
     {
+        if(!mapa)
+            return;
         // Convertirla a latitud/longitud mediante el mapa
         var temp = new Vector3(posX, 0, posZ);
         var latlon = mapa.TransformWorldPointToLatLon(temp);

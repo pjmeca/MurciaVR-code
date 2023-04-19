@@ -33,6 +33,7 @@ public class MovimientoCiudad : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("MeshFilter " + mapRenderer.gameObject.GetComponent("MeshFilter"));
         // Obtener la posición del jugador
         var posX = jugador.transform.position.x;
         var posZ = jugador.transform.position.z;
