@@ -17,15 +17,12 @@ public class BodyCollision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.frameCount == 1)
+        foreach (GameObject o in ignorarColisiones) // hay que llamarla todo el rato, porque pueden cambiarse las manos por mandos
         {
-            foreach (GameObject o in ignorarColisiones)
-            {
-                foreach (Collider c in o.transform.GetComponentsInChildren<Collider>())
-                    Physics.IgnoreCollision(c, GetComponent<Collider>(), true);
+            foreach (Collider c in o.transform.GetComponentsInChildren<Collider>())
+                Physics.IgnoreCollision(c, GetComponent<Collider>(), true);
 
-            }
-        }        
+        }   
 
         gameObject.transform.position = new Vector3(cabeza.position.x, pies.position.y, cabeza.position.z);
     }
