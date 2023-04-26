@@ -1880,6 +1880,7 @@ GameObject:
   - component: {fileID: 919132149544369430}
   - component: {fileID: 919132149544369431}
   - component: {fileID: 919132149544369432}
+  - component: {fileID: 919132149544369436}
   m_Layer: 0
   m_Name: PistolaAspiradora
   m_TagString: Untagged
@@ -2017,6 +2018,23 @@ MonoBehaviour:
   _handAligment: 1
   _handGrabPoses:
   - {fileID: 1578174651}
+--- !u!114 &919132149544369436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149544369427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854a6239cf738fb469b09308808fe92e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  estado: 1
+  SonidoInicio: {fileID: 8300000, guid: 4dbb28f87f377924a90f4a7d7ff24d26, type: 3}
+  SonidoMedio: {fileID: 8300000, guid: edd43ff26766db04ca18bbb74b095202, type: 3}
+  SonidoFin: {fileID: 8300000, guid: a6b132a8228ea3a4f8805acf97a477ed, type: 3}
+  InicioAdelantado: 0.05
 --- !u!1 &1382277528092537406
 GameObject:
   m_ObjectHideFlags: 0
