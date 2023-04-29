@@ -21,9 +21,13 @@ public class PistolaAspiradora : MonoBehaviour
     private AudioSource[] sources;
     public float InicioAdelantado;
 
+    private ParticleSystem Particulas;
+
     // Start is called before the first frame update
     void Start()
     {
+        Particulas = gameObject.GetComponentInChildren<ParticleSystem>();
+
         sources = new AudioSource[3];
         for (int i = 0; i < 3; i++)
         {
@@ -75,6 +79,8 @@ public class PistolaAspiradora : MonoBehaviour
         sources[0].Stop();
         sources[0].Play();
         sources[1].mute = true;
+
+        Particulas.Play();
     }
 
     private IEnumerator Medio() 
@@ -91,6 +97,8 @@ public class PistolaAspiradora : MonoBehaviour
         yield return new WaitForSeconds(InicioAdelantado);
         sources[0].Stop();
         sources[1].mute = true;
+
+        Particulas.Stop();
     }
 
     private void CheckAgarre()
@@ -110,5 +118,7 @@ public class PistolaAspiradora : MonoBehaviour
             else
                 estado = Estado.Apagado;
         }
+        else
+            estado = Estado.Apagado;
     }
 }
