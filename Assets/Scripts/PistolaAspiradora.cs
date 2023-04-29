@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Oculus.Interaction.HandGrab;
+using Oculus.Interaction.Input;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -41,7 +43,9 @@ public class PistolaAspiradora : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(estado == Estado.Encendido)
+        CheckAgarre();        
+
+        if (estado == Estado.Encendido)
         {
             play = true;
         } else if(estado == Estado.Apagado)
@@ -87,5 +91,24 @@ public class PistolaAspiradora : MonoBehaviour
         yield return new WaitForSeconds(InicioAdelantado);
         sources[0].Stop();
         sources[1].mute = true;
+    }
+
+    private void CheckAgarre()
+    {
+        if (GetComponent<GrabbableItem>().IsAgarrado)
+        {
+            var r = gameObject.GetComponents<HandGrabInteractable>()[0].HandGrabPoses[0].HandPose.Handedness.ToString();
+            var restado = gameObject.GetComponents<HandGrabInteractable>()[0].State;
+            bool rtrigger = GameObject.Find("Jugador/TrackingSpace/RightHandAnchor").GetComponent<JoystickLocomotionOld>().IsGatilloTriggered();
+
+            var l = gameObject.GetComponents<HandGrabInteractable>()[1].HandGrabPoses[0].HandPose.Handedness.ToString();
+            var lestado = gameObject.GetComponents<HandGrabInteractable>()[1].State;
+            bool ltrigger = GameObject.Find("Jugador/TrackingSpace/LeftHandAnchor").GetComponent<JoystickLocomotionOld>().IsGatilloTriggered();
+
+            if ((restado == Oculus.Interaction.InteractableState.Select && rtrigger) || (lestado == Oculus.Interaction.InteractableState.Select && ltrigger))
+                estado = Estado.Encendido;
+            else
+                estado = Estado.Apagado;
+        }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using OVR;
+using Oculus.Interaction.Input;
 
 /*
  * Script para el movimiento VR del jugador sin tener en cuenta la API de la ciudad.
@@ -50,5 +51,23 @@ public class JoystickLocomotionOld : MonoBehaviour
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
         player.transform.Rotate(speed * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
+    }
+
+    /*
+     * Comprueba si se está pulsando el gatillo con o sin mando.
+     */
+    public bool IsGatilloTriggered()
+    {
+        var hand = gameObject.GetComponentInChildren<OVRHand>();
+        bool isIndexFingerPinching = hand.GetFingerPinchStrength(OVRHand.HandFinger.Index) > 0 || hand.GetFingerPinchStrength(OVRHand.HandFinger.Index) > 0;
+        if (isIndexFingerPinching)
+            return true;
+
+        if (gameObject.name.Equals("LeftHandAnchor"))
+            return OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch);
+        if (gameObject.name.Equals("RightHandAnchor"))
+            return OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch);        
+
+        return false;
     }
 }

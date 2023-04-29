@@ -12,10 +12,14 @@ using UnityEngine.Assertions;
 public class GrabbableItem : MonoBehaviour
 {
     private GameObject Jugador;
-    private bool IsAgarrado;
+    private Grabbable grabbable;
+
+    public bool IsAgarrado;
 
     void Start()
     {
+        grabbable = gameObject.GetComponent<Grabbable>();
+
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         HandGrabInteractable h = gameObject.GetComponent<HandGrabInteractable>();
         h.InjectRigidbody(rb);
@@ -27,7 +31,7 @@ public class GrabbableItem : MonoBehaviour
 
     void Update()
     {
-        if(!IsAgarrado && gameObject.GetComponent<Grabbable>().GrabPoints.Count > 0) // está siendo agarrado
+        if(!IsAgarrado && grabbable.GrabPoints.Count > 0) // está siendo agarrado
         {
             // Ignora todas sus colisiones con todas las colisiones del jugador
             foreach (Collider c in Jugador.GetComponentsInChildren<Collider>())
@@ -35,12 +39,12 @@ public class GrabbableItem : MonoBehaviour
                     Physics.IgnoreCollision(c, c2, true);
             IsAgarrado = true;
         }
-        else if(IsAgarrado && gameObject.GetComponent<Grabbable>().GrabPoints.Count == 0)
+        else if(IsAgarrado && grabbable.GrabPoints.Count == 0)
         {
             foreach (Collider c in Jugador.GetComponentsInChildren<Collider>())
                 foreach (Collider c2 in gameObject.GetComponentsInChildren<Collider>())
                     Physics.IgnoreCollision(c, c2, false);
-            IsAgarrado =false;
+            IsAgarrado = false;
         }
     }
 }

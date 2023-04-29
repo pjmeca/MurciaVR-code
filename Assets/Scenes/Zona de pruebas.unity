@@ -477,6 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4450a634ff3647942bc9a3a7523dcf76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsAgarrado: 0
 --- !u!54 &410526252
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -640,6 +641,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Jugador
+      objectReference: {fileID: 0}
+    - target: {fileID: 2524639858660045297, guid: 8125f7fde315e294f933d87c7a2f8c50,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554770966705500229, guid: 8125f7fde315e294f933d87c7a2f8c50,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555756179181048779, guid: 8125f7fde315e294f933d87c7a2f8c50,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2556340953537145263, guid: 8125f7fde315e294f933d87c7a2f8c50,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2838090048590468503, guid: 8125f7fde315e294f933d87c7a2f8c50,
         type: 3}
@@ -1147,6 +1168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4450a634ff3647942bc9a3a7523dcf76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsAgarrado: 0
 --- !u!114 &1053745881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1633,6 +1655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4450a634ff3647942bc9a3a7523dcf76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsAgarrado: 0
 --- !u!114 &1722668465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1876,9 +1899,9 @@ GameObject:
   m_Component:
   - component: {fileID: 543450653210175401}
   - component: {fileID: 919132149544369428}
+  - component: {fileID: 919132149544369431}
   - component: {fileID: 919132149544369429}
   - component: {fileID: 919132149544369430}
-  - component: {fileID: 919132149544369431}
   - component: {fileID: 919132149544369432}
   - component: {fileID: 919132149544369436}
   m_Layer: 0
@@ -1903,7 +1926,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &919132149544369429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1916,6 +1939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4450a634ff3647942bc9a3a7523dcf76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsAgarrado: 0
 --- !u!114 &919132149544369430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1951,7 +1975,7 @@ MonoBehaviour:
     _thumbRequirement: 1
     _indexRequirement: 1
     _middleRequirement: 1
-    _ringRequirement: 0
+    _ringRequirement: 1
     _pinkyRequirement: 0
     _unselectMode: 0
   _movementProvider: {fileID: 0}
@@ -2001,9 +2025,9 @@ MonoBehaviour:
     _positionRotationWeight: 0.8
   _supportedGrabTypes: 2
   _pinchGrabRules:
-    _thumbRequirement: 1
-    _indexRequirement: 1
-    _middleRequirement: 1
+    _thumbRequirement: 0
+    _indexRequirement: 0
+    _middleRequirement: 0
     _ringRequirement: 0
     _pinkyRequirement: 0
     _unselectMode: 0
@@ -2011,7 +2035,7 @@ MonoBehaviour:
     _thumbRequirement: 1
     _indexRequirement: 1
     _middleRequirement: 1
-    _ringRequirement: 0
+    _ringRequirement: 1
     _pinkyRequirement: 0
     _unselectMode: 0
   _movementProvider: {fileID: 0}
@@ -2341,8 +2365,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.00019165846, y: 0.00047069928, z: 0.00079520344}
-  m_Center: {x: -0.0002833626, y: 0.0009207842, z: -0.00161325}
+  m_Size: {x: 0.00019165811, y: 0.00022951851, z: 0.00091760757}
+  m_Center: {x: -0.00028336424, y: 0.00086708093, z: -0.0015521089}
 --- !u!4 &7628423888070112284
 Transform:
   m_ObjectHideFlags: 0
