@@ -13,6 +13,8 @@ public class PistolaAspiradora : MonoBehaviour
         Encendido, Apagado
     }
     public Estado estado = Estado.Apagado;
+    public bool IsAgarrado { get; private set; }
+
     private bool play = false;
     private bool wasPlaying = false;
     private bool stop = false;
@@ -120,5 +122,7 @@ public class PistolaAspiradora : MonoBehaviour
         }
         else
             estado = Estado.Apagado;
+
+        IsAgarrado = GetComponent<GrabbableItem>().IsAgarrado;
     }
 }
