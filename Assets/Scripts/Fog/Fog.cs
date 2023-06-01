@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Oculus.Platform.Models;
 using UnityEngine;
+using UnityEngine.Android;
 
 /// <summary>
 /// Identifica las propiedades de la niebla, como el color o el tamaño.
@@ -13,6 +14,8 @@ public class Fog : MonoBehaviour
     public const float MIN_ALPHA = 0.2f;
  
     private ParticleSystem _particleSystem;
+    private SphereCollider _sphereCollider;
+    private float INITIAL_RADIUS;
 
     public enum CalidadDelAire
     {
@@ -41,14 +44,35 @@ public class Fog : MonoBehaviour
         new Vector3(4.8f,4.8f,2.5f),
         new Vector3(8,8f,2.5f)
     };
+    private int[] _rateOverTime =
+    {
+        20,
+        40,
+        60,
+        150,
+        350,
+        500
+    };
 
     public CalidadDelAire Calidad = CalidadDelAire.Buena;
     private CalidadDelAire? _prevCalidad = null;
+    public ParticleSystem.MinMaxGradient Gradiente
+    { get
+        {
+            return new ParticleSystem.MinMaxGradient(CrearGradiente(_colores[(int)Calidad], GetAlpha(Calidad)));
+        } 
+    }
     
 
     public void Start()
     {
         _particleSystem = GetComponent<ParticleSystem>();    
+        _sphereCollider = GetComponent<SphereCollider>();
+
+        var emission = _particleSystem.emission;
+        var rateOverTime = emission.rateOverTime;
+
+        INITIAL_RADIUS = _sphereCollider.radius;
     }
 
     public void Update()
@@ -67,7 +91,7 @@ public class Fog : MonoBehaviour
     private void UpdateGradient()
     {
         var colorOverLifetimeModule = _particleSystem.colorOverLifetime;
-        colorOverLifetimeModule.color = new ParticleSystem.MinMaxGradient(CrearGradiente(_colores[(int)Calidad], GetAlpha(Calidad)));
+        colorOverLifetimeModule.color = Gradiente;
     }
 
     private void UpdateSize()
@@ -76,10 +100,11 @@ public class Fog : MonoBehaviour
         shape.scale = _scales[(int)Calidad];
         var emission = _particleSystem.emission;
         var rateOverTime = emission.rateOverTime;
-        Debug.Log("1 "+rateOverTime.constant);
-        rateOverTime.constant *= _scales[(int)Calidad].x;
-        Debug.Log("2 "+rateOverTime.constant);
+        rateOverTime.constant = _rateOverTime[(int)Calidad];
         emission.rateOverTime = rateOverTime;
+
+        // Actualizar también el tamaño del collider
+        _sphereCollider.radius = INITIAL_RADIUS * _scales[(int)Calidad].x;
     }
 
     /// <summary>

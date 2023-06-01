@@ -10527,7 +10527,7 @@ GameObject:
   - component: {fileID: 782194765}
   m_Layer: 0
   m_Name: Niebla
-  m_TagString: Untagged
+  m_TagString: Fog
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11172,7 +11172,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 5000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -15337,7 +15337,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.34
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &782194764
 MonoBehaviour:
@@ -16665,6 +16665,7 @@ GameObject:
   - component: {fileID: 1911369657}
   - component: {fileID: 1911369659}
   - component: {fileID: 1911369658}
+  - component: {fileID: 1911369660}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -16761,7 +16762,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e23d7f614af86e4d828eb8b985a4573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Fog: {fileID: 782194759}
 --- !u!198 &1911369658
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -21541,6 +21541,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!135 &1911369660
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911369651}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2091458117
 PrefabInstance:
   m_ObjectHideFlags: 0

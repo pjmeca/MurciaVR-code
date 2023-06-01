@@ -4,54 +4,66 @@ using UnityEngine;
 
 public class FogActivator : MonoBehaviour
 {
-    public GameObject Fog;
-
-    private Collider fogCollider;
     private GameObject esfera;
-    private Collider cuerpo;
     private ParticleSystem ps;
+
+    private List<GameObject> CollidedFogs;
 
     // Start is called before the first frame update
     void Start()
     {
-        fogCollider = Fog.GetComponent<SphereCollider>();
+        CollidedFogs = new();
 
         esfera = gameObject;
-        cuerpo = GameObject.Find("Jugador/Cuerpo").GetComponent<CapsuleCollider>();
         ps = esfera.GetComponent<ParticleSystem>();
 
         Hide(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter(Collider collider)
     {
-        bool isInside = IsInside();
-
-        // Si está dentro de fogCollider -> esfera activada
-        // Si no -> esfera desactivada
-        //Hide(!isInside);
-        if(isInside)
+        if (collider.gameObject.CompareTag("Fog"))
         {
-            if(!ps.isPlaying)
+            GameObject niebla = collider.gameObject;
+            CollidedFogs.Add(niebla);
+
+            if (!ps.isPlaying)
             {
                 ps.Play();
             }
-        } else
-        {
-            ps.Stop();
+
+            // Actualizamos el color de la niebla
+            UpdateColor(niebla);
         }
-
-        // TODO buscar un material para la esfera que simule niebla (darle un poco de transparencia)
-        // TODO hacer que la esfera aparezca y desaparezca gradualmente
-
     }
 
-    // Comprueba si se encuentra dentro de la niebla
-    bool IsInside()
+    void OnTriggerExit(Collider collider)
     {
-        // Está dentro o intersecta
-        return (fogCollider.bounds.Contains(cuerpo.ClosestPoint(fogCollider.transform.position)))/* || (fogCollider.bounds.Intersects(cuerpo.bounds))*/;
+        if (collider.gameObject.CompareTag("Fog"))
+        {
+            GameObject niebla = collider.gameObject;
+            CollidedFogs.Remove(niebla);
+
+            // Si no hay más nieblas, se para
+            if (CollidedFogs.Count == 0)
+            {
+                ps.Stop();
+            } 
+            // Si aún quedan nieblas, se actualiza el color
+            else
+            {
+                // LIFO
+                niebla = CollidedFogs[CollidedFogs.Count-1];
+                // Actualizamos el color de la niebla
+                UpdateColor(niebla);
+            }            
+        }
+    }
+
+    private void UpdateColor(GameObject niebla)
+    {
+        var colorOverLifetimeModule = ps.colorOverLifetime;
+        colorOverLifetimeModule.color = niebla.GetComponent<Fog>().Gradiente;
     }
 
     // Oculta la esfera
