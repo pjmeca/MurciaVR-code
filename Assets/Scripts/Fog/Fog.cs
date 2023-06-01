@@ -32,7 +32,16 @@ public class Fog : MonoBehaviour
         Color255.New(192, 0, 0),
         Color255.New(153, 0, 255)
     };
-    
+    private Vector3[] _scales =
+    {
+        new Vector3(1,1,1),
+        new Vector3(2,2,2),
+        new Vector3(2.5f,2.5f,2.5f),
+        new Vector3(3.5f,3.5f,2.5f),
+        new Vector3(4.8f,4.8f,2.5f),
+        new Vector3(8,8f,2.5f)
+    };
+
     public CalidadDelAire Calidad = CalidadDelAire.Buena;
     private CalidadDelAire? _prevCalidad = null;
     
@@ -43,14 +52,34 @@ public class Fog : MonoBehaviour
     }
 
     public void Update()
-    {
-        // Actualizar el color
+    {        
         if (_prevCalidad == null || _prevCalidad != Calidad)
         {
-            var colorOverLifetimeModule = _particleSystem.colorOverLifetime;
-            colorOverLifetimeModule.color = new ParticleSystem.MinMaxGradient(CrearGradiente(_colores[(int)Calidad], GetAlpha(Calidad)));
+            // Actualizar el color
+            UpdateGradient();
+            // Actualizar el tamaño
+            UpdateSize();
+
             _prevCalidad = Calidad;
         }        
+    }
+
+    private void UpdateGradient()
+    {
+        var colorOverLifetimeModule = _particleSystem.colorOverLifetime;
+        colorOverLifetimeModule.color = new ParticleSystem.MinMaxGradient(CrearGradiente(_colores[(int)Calidad], GetAlpha(Calidad)));
+    }
+
+    private void UpdateSize()
+    {
+        var shape = _particleSystem.shape;
+        shape.scale = _scales[(int)Calidad];
+        var emission = _particleSystem.emission;
+        var rateOverTime = emission.rateOverTime;
+        Debug.Log("1 "+rateOverTime.constant);
+        rateOverTime.constant *= _scales[(int)Calidad].x;
+        Debug.Log("2 "+rateOverTime.constant);
+        emission.rateOverTime = rateOverTime;
     }
 
     /// <summary>
