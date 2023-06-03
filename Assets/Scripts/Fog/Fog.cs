@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -7,13 +9,9 @@ using UnityEngine;
 public class Fog : MonoBehaviour
 {
     #region PROPIEDADES
+    #region GLOBALES
     public const float MIN_ALPHA = 0.2f;
- 
-    private ParticleSystem _particleSystem;
-    private SphereCollider _sphereCollider;
-    private float INITIAL_RADIUS;        
-    
-    private Vector3[] _scales =
+    private readonly static Vector3[] _scales =
     {
         new Vector3(1,1,1),
         new Vector3(2,2,2),
@@ -22,7 +20,7 @@ public class Fog : MonoBehaviour
         new Vector3(4.8f,4.8f,2.5f),
         new Vector3(8,8f,2.5f)
     };
-    private int[] _rateOverTime =
+    private readonly static int[] _rateOverTime =
     {
         20,
         40,
@@ -31,17 +29,26 @@ public class Fog : MonoBehaviour
         350,
         500
     };
+    #endregion
+
+    #region DE OBJETO
+    private ParticleSystem _particleSystem;
+    private SphereCollider _sphereCollider;
+    private float INITIAL_RADIUS;
 
     public CalidadDelAire Calidad;
-    public CalidadDelAire.Indices Indice;
+    public CalidadDelAire.Indices Indice; // Control manual del índice (para desarrollo, no se usará en producción)
     private CalidadDelAire.Indices? _prevIndice = null;
+
     public ParticleSystem.MinMaxGradient Gradiente
-    { 
+    {
         get
         {
             return new ParticleSystem.MinMaxGradient(CrearGradiente(Calidad.Color, GetAlpha(Calidad)));
-        } 
+        }
     }
+    #endregion
+
     #endregion
 
     #region MÉTODOS UNITY
@@ -50,18 +57,19 @@ public class Fog : MonoBehaviour
         _particleSystem = GetComponent<ParticleSystem>();    
         _sphereCollider = GetComponent<SphereCollider>();
 
-        var emission = _particleSystem.emission;
-        var rateOverTime = emission.rateOverTime;
-
         INITIAL_RADIUS = _sphereCollider.radius;
 
-        Calidad = new();
+        //Calidad = new();
+        Calidad = new(4.8f, 8.3f, 20.55f, 23.8f, 0); // Mediciones 03/06/23 en San Basilio
         Indice = Calidad.Indice;
     }
 
     public void Update()
-    {
+    {   
+        // Comprobar si se ha cambiado el índice (desde el Inspector)
         Calidad.Indice = Indice;
+        Indice = Calidad.Indice;
+        //Debug.Log($"[{string.Join(",", Calidad.Concentraciones)}]");
 
         if (_prevIndice == null || _prevIndice != Calidad.Indice)
         {
@@ -143,11 +151,13 @@ public class Fog : MonoBehaviour
 
     #region FUNCIONALIDAD
     /// <summary>
-    /// Limpia la nube de contaminación, reduciendo tamaño y color   
+    /// Limpia la nube de contaminación, reduciendo tamaño y color en la siguiente iteración
     /// </summary>
+    [ButtonInvoke("Limpiar")]
+    public bool testLimpiar;
     public void Limpiar()
     {
-
+        Calidad.Limpiar();
     }
     #endregion
 }

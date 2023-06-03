@@ -40,6 +40,8 @@ public class CalidadDelAire
         /*Muy desfavorable*/           { 750, 340,  150, 380,    75},
         /*Extremadamente desfavorable*/{1250,1000, 1200, 800,   800},
     };
+
+    public static readonly float SPEED_LIMPIEZA = 100f;
     #endregion
 
     #region DE OBJETO
@@ -57,7 +59,7 @@ public class CalidadDelAire
         }
     }
     public Color Color { get { return _colores[(int)Indice]; } }
-    public int[] Concentraciones {  get; private set; }
+    public float[] Concentraciones {  get; private set; }
     #endregion
 
     #endregion
@@ -67,12 +69,12 @@ public class CalidadDelAire
     {
         Indice = indice;
     }
-    public CalidadDelAire(int SO2, int NO2, int PM10, int O3, int PM25)
+    public CalidadDelAire(float SO2, float NO2, float PM10, float O3, float PM25)
     {
         if (SO2 < 0 || NO2 < 0 || PM10 < 0 || O3 < 0 || PM25 < 0)
             throw new ArgumentException("El nivel de concentración no puede ser negativo.");
 
-        Concentraciones = new int[] { SO2, NO2, PM10, O3, PM25 };
+        Concentraciones = new float[] { SO2, NO2, PM10, O3, PM25 };
     }
     #endregion
 
@@ -87,7 +89,7 @@ public class CalidadDelAire
     /// <param name="O3">Nivel de concentración de O<sub>3</sub> (µg/m³).</param>
     /// <param name="PM25">Nivel de concentración de PM2,5 (µg/m³).</param>
     /// <returns>El índice de contaminación escogido.</returns>
-    public static Indices CalcularIndice(int SO2, int NO2, int PM10, int O3, int PM25)
+    public static Indices CalcularIndice(float SO2, float NO2, float PM10, float O3, float PM25)
     {
         // El Índice de Calidad del Aire Global se calcula como el peor de los índices individuales.
         int indice = 0;
@@ -99,7 +101,7 @@ public class CalidadDelAire
 
         return (Indices) indice;
     }
-    public static Indices CalcularIndice(int[] concentraciones)
+    public static Indices CalcularIndice(float[] concentraciones)
     {
         if (concentraciones.Length != 5)
             throw new ArgumentException("El array debe contener 5 enteros que se correspondan con SO2, NO2, PM10, O3 y PM25.");
@@ -108,7 +110,7 @@ public class CalidadDelAire
     }
 
     #region AUXILIARES
-    private static Indices CalcularIndiceSO2(int SO2)
+    private static Indices CalcularIndiceSO2(float SO2)
     {
         if (SO2 < 0)
         {
@@ -133,7 +135,7 @@ public class CalidadDelAire
         }
         return Indices.ExtremadamenteDesfavorable;
     }
-    private static Indices CalcularIndiceNO2(int NO2)
+    private static Indices CalcularIndiceNO2(float NO2)
     {
         if (NO2 < 0)
         {
@@ -162,7 +164,7 @@ public class CalidadDelAire
         }
         return Indices.ExtremadamenteDesfavorable;
     }
-    private static Indices CalcularIndicePM10(int PM10)
+    private static Indices CalcularIndicePM10(float PM10)
     {
         if (PM10 < 0)
         {
@@ -191,7 +193,7 @@ public class CalidadDelAire
         }
         return Indices.ExtremadamenteDesfavorable;
     }
-    private static Indices CalcularIndiceO3(int O3)
+    private static Indices CalcularIndiceO3(float O3)
     {
         if (O3 < 0)
         {
@@ -220,7 +222,7 @@ public class CalidadDelAire
         }
         return Indices.ExtremadamenteDesfavorable;
     }
-    private static Indices CalcularIndicePM25(int PM25)
+    private static Indices CalcularIndicePM25(float PM25)
     {
         if (PM25 < 0)
         {
@@ -251,4 +253,29 @@ public class CalidadDelAire
     }
     #endregion
     #endregion
+
+    /// <summary>
+    /// Reduce las concentraciones proporcionalmente como resultado de una limpieza de aire.
+    /// </summary>
+    public void Limpiar()
+    {
+        // Si se ha creado con índice fijo, no se modifica.
+        if (Concentraciones == null)
+            return;
+
+        // Restar de manera proporcional a la escala
+        var resta = 100 * SPEED_LIMPIEZA * Time.deltaTime / 1250;
+        Concentraciones[0] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 1250;
+        Concentraciones[1] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 1000;
+        Concentraciones[2] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 1200;
+        Concentraciones[3] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 800;
+        Concentraciones[4] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 800;
+
+        // Asegurarse de que ningún valor sea negativo
+        Concentraciones[0] = Concentraciones[0] < 0 ? 0 : Concentraciones[0];
+        Concentraciones[1] = Concentraciones[1] < 0 ? 0 : Concentraciones[1];
+        Concentraciones[2] = Concentraciones[2] < 0 ? 0 : Concentraciones[2];
+        Concentraciones[3] = Concentraciones[3] < 0 ? 0 : Concentraciones[3];
+        Concentraciones[4] = Concentraciones[4] < 0 ? 0 : Concentraciones[4];
+    }
 }
