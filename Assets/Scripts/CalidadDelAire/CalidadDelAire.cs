@@ -7,6 +7,8 @@ using UnityEngine;
 public class CalidadDelAire
 {
     #region PROPIEDADES
+
+    #region GLOBALES
     public enum Indices
     {
         Buena,
@@ -16,10 +18,9 @@ public class CalidadDelAire
         MuyDesfavorable,
         ExtremadamenteDesfavorable
     }
-    public Indices Indice { get; set; }
     public static int NumIndices { get { return Enum.GetNames(typeof(Indices)).Length; } }
 
-    private Color[] _colores =
+    private static Color[] _colores =
     {
         Color255.New(0, 255, 250),
         Color255.New(80, 200, 160),
@@ -28,11 +29,226 @@ public class CalidadDelAire
         Color255.New(192, 0, 0),
         Color255.New(153, 0, 255)
     };
-    public Color Color { get { return _colores[(int)Indice]; } }
+
+    private static readonly int[,] BANDAS_CONCENTRACION =
+    {
+        //                               SO2  NO2  PM10   O3  PM2,5
+        /*Buena*/                      { 100,  40,   20,  50,    10},
+        /*Razonablemente buena*/       { 200,  90,   40, 100,    20},
+        /*Regular*/                    { 350, 120,   50, 130,    25},
+        /*Desfavorable*/               { 500, 230,  100, 240,    50},
+        /*Muy desfavorable*/           { 750, 340,  150, 380,    75},
+        /*Extremadamente desfavorable*/{1250,1000, 1200, 800,   800},
+    };
     #endregion
 
+    #region DE OBJETO
+    private Indices _indice;
+    public Indices Indice
+    {
+        get
+        {
+            // Si Concentraciones es null es porque se ha construido con un índice fijo no calculable.
+            return Concentraciones == null ? _indice : CalcularIndice(Concentraciones); 
+        }
+        set
+        {
+            _indice = value;
+        }
+    }
+    public Color Color { get { return _colores[(int)Indice]; } }
+    public int[] Concentraciones {  get; private set; }
+    #endregion
+
+    #endregion
+
+    #region CONSTRUCTOR
     public CalidadDelAire(Indices indice=Indices.Buena)
     {
         Indice = indice;
     }
+    public CalidadDelAire(int SO2, int NO2, int PM10, int O3, int PM25)
+    {
+        if (SO2 < 0 || NO2 < 0 || PM10 < 0 || O3 < 0 || PM25 < 0)
+            throw new ArgumentException("El nivel de concentración no puede ser negativo.");
+
+        Concentraciones = new int[] { SO2, NO2, PM10, O3, PM25 };
+    }
+    #endregion
+
+    #region CALCULAR EL ÍNDICE DE CALIDAD DEL AIRE
+    /// <summary>
+    /// Calcula el índice de calidad del aire en base a los nibeles de concetración de las sustancias.
+    /// Más información: https://sinqlair.carm.es/calidadaire/principal/interpretacion.aspx
+    /// </summary>
+    /// <param name="SO2">Nivel de concentración de SO<sub>2</sub> (µg/m³).</param>
+    /// <param name="NO2">Nivel de concentración de NO<sub>2</sub> (µg/m³).</param>
+    /// <param name="PM10">Nivel de concentración de PM10 (µg/m³).</param>
+    /// <param name="O3">Nivel de concentración de O<sub>3</sub> (µg/m³).</param>
+    /// <param name="PM25">Nivel de concentración de PM2,5 (µg/m³).</param>
+    /// <returns>El índice de contaminación escogido.</returns>
+    public static Indices CalcularIndice(int SO2, int NO2, int PM10, int O3, int PM25)
+    {
+        // El Índice de Calidad del Aire Global se calcula como el peor de los índices individuales.
+        int indice = 0;
+        indice = Mathf.Max(indice, (int)CalcularIndiceSO2(SO2));
+        indice = Mathf.Max(indice, (int)CalcularIndiceNO2(NO2));
+        indice = Mathf.Max(indice, (int)CalcularIndicePM10(PM10));
+        indice = Mathf.Max(indice, (int)CalcularIndiceO3(O3));
+        indice = Mathf.Max(indice, (int)CalcularIndicePM25(PM25));
+
+        return (Indices) indice;
+    }
+    public static Indices CalcularIndice(int[] concentraciones)
+    {
+        if (concentraciones.Length != 5)
+            throw new ArgumentException("El array debe contener 5 enteros que se correspondan con SO2, NO2, PM10, O3 y PM25.");
+
+        return CalcularIndice(concentraciones[0], concentraciones[1], concentraciones[2], concentraciones[3], concentraciones[4]);
+    }
+
+    #region AUXILIARES
+    private static Indices CalcularIndiceSO2(int SO2)
+    {
+        if (SO2 < 0)
+        {
+            throw new ArgumentException("El nivel de concentración no puede ser negativo.");
+        }
+
+        if (SO2 <= BANDAS_CONCENTRACION[0,0])
+        {
+            return Indices.Buena;
+        } else if (SO2 <= BANDAS_CONCENTRACION[1, 0])
+        {
+            return Indices.RazonablementeBuena;
+        } else if (SO2 <= BANDAS_CONCENTRACION[2, 0])
+        {
+            return Indices.Regular;
+        } else if (SO2 <= BANDAS_CONCENTRACION[3, 0])
+        {
+            return Indices.Desfavorable;
+        } else if (SO2 <= BANDAS_CONCENTRACION[4, 0])
+        {
+            return Indices.MuyDesfavorable;
+        }
+        return Indices.ExtremadamenteDesfavorable;
+    }
+    private static Indices CalcularIndiceNO2(int NO2)
+    {
+        if (NO2 < 0)
+        {
+            throw new ArgumentException("El nivel de concentración no puede ser negativo.");
+        }
+
+        if (NO2 <= BANDAS_CONCENTRACION[0, 1])
+        {
+            return Indices.Buena;
+        }
+        else if (NO2 <= BANDAS_CONCENTRACION[1, 1])
+        {
+            return Indices.RazonablementeBuena;
+        }
+        else if (NO2 <= BANDAS_CONCENTRACION[2, 1])
+        {
+            return Indices.Regular;
+        }
+        else if (NO2 <= BANDAS_CONCENTRACION[3, 1])
+        {
+            return Indices.Desfavorable;
+        }
+        else if (NO2 <= BANDAS_CONCENTRACION[4, 1])
+        {
+            return Indices.MuyDesfavorable;
+        }
+        return Indices.ExtremadamenteDesfavorable;
+    }
+    private static Indices CalcularIndicePM10(int PM10)
+    {
+        if (PM10 < 0)
+        {
+            throw new ArgumentException("El nivel de concentración no puede ser negativo.");
+        }
+
+        if (PM10 <= BANDAS_CONCENTRACION[0, 2])
+        {
+            return Indices.Buena;
+        }
+        else if (PM10 <= BANDAS_CONCENTRACION[1, 2])
+        {
+            return Indices.RazonablementeBuena;
+        }
+        else if (PM10 <= BANDAS_CONCENTRACION[2, 2])
+        {
+            return Indices.Regular;
+        }
+        else if (PM10 <= BANDAS_CONCENTRACION[3, 2])
+        {
+            return Indices.Desfavorable;
+        }
+        else if (PM10 <= BANDAS_CONCENTRACION[4, 2])
+        {
+            return Indices.MuyDesfavorable;
+        }
+        return Indices.ExtremadamenteDesfavorable;
+    }
+    private static Indices CalcularIndiceO3(int O3)
+    {
+        if (O3 < 0)
+        {
+            throw new ArgumentException("El nivel de concentración no puede ser negativo.");
+        }
+
+        if (O3 <= BANDAS_CONCENTRACION[0, 3])
+        {
+            return Indices.Buena;
+        }
+        else if (O3 <= BANDAS_CONCENTRACION[1, 3])
+        {
+            return Indices.RazonablementeBuena;
+        }
+        else if (O3 <= BANDAS_CONCENTRACION[2, 3])
+        {
+            return Indices.Regular;
+        }
+        else if (O3 <= BANDAS_CONCENTRACION[3, 3])
+        {
+            return Indices.Desfavorable;
+        }
+        else if (O3 <= BANDAS_CONCENTRACION[4, 3])
+        {
+            return Indices.MuyDesfavorable;
+        }
+        return Indices.ExtremadamenteDesfavorable;
+    }
+    private static Indices CalcularIndicePM25(int PM25)
+    {
+        if (PM25 < 0)
+        {
+            throw new ArgumentException("El nivel de concentración no puede ser negativo.");
+        }
+
+        if (PM25 <= BANDAS_CONCENTRACION[0, 4])
+        {
+            return Indices.Buena;
+        }
+        else if (PM25 <= BANDAS_CONCENTRACION[1, 4])
+        {
+            return Indices.RazonablementeBuena;
+        }
+        else if (PM25 <= BANDAS_CONCENTRACION[2, 4])
+        {
+            return Indices.Regular;
+        }
+        else if (PM25 <= BANDAS_CONCENTRACION[3, 4])
+        {
+            return Indices.Desfavorable;
+        }
+        else if (PM25 <= BANDAS_CONCENTRACION[4, 4])
+        {
+            return Indices.MuyDesfavorable;
+        }
+        return Indices.ExtremadamenteDesfavorable;
+    }
+    #endregion
+    #endregion
 }
