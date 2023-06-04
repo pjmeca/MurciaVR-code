@@ -13,11 +13,9 @@ public class PistolaAspiradora : MonoBehaviour
         Encendido, Apagado
     }
     public Estado estado = Estado.Apagado;
-    public bool IsAgarrado { get; private set; }
+    public bool IsAgarrado { get { return GetComponent<GrabbableItem>().IsAgarrado; } }
 
-    private bool play = false;
     private bool wasPlaying = false;
-    private bool stop = false;
 
     public AudioClip SonidoInicio, SonidoMedio, SonidoFin;
     private AudioSource[] sources;
@@ -25,7 +23,20 @@ public class PistolaAspiradora : MonoBehaviour
 
     private ParticleSystem Particulas;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        // Dar de alta los manejadores de eventos
+        Eventos.PistolaEncendida += OnPistolaEncendida;
+        Eventos.PistolaApagada += OnPistolaApagada;
+    }
+
+    private void OnDestroy()
+    {
+        // Eliminar los manejadores de eventos
+        Eventos.PistolaEncendida -= OnPistolaEncendida;
+        Eventos.PistolaApagada -= OnPistolaApagada;
+    }
+
     void Start()
     {
         Particulas = gameObject.GetComponentInChildren<ParticleSystem>();
@@ -46,35 +57,32 @@ public class PistolaAspiradora : MonoBehaviour
         sources[2].playOnAwake = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    #region MANEJO DE EVENTOS
+    private void OnPistolaEncendida()
     {
-        CheckAgarre();        
+        estado = Estado.Encendido;
 
-        if (estado == Estado.Encendido)
+        if (!wasPlaying)
         {
-            play = true;
-        } else if(estado == Estado.Apagado)
-        {
-            stop = true;
-        }
-
-        if (play && !wasPlaying)
-        {
-            stop = false;
             wasPlaying = true;
 
             Inicio();
             StartCoroutine(Medio());
         }
-        
-        if(stop && wasPlaying)
+    }
+
+    private void OnPistolaApagada()
+    {
+        estado = Estado.Apagado;
+
+        if (wasPlaying)
         {
-            play = wasPlaying = false;
+            wasPlaying = false;
 
             StartCoroutine(Fin());
         }
     }
+    #endregion
 
     private void Inicio()
     {
@@ -101,28 +109,5 @@ public class PistolaAspiradora : MonoBehaviour
         sources[1].mute = true;
 
         Particulas.Stop();
-    }
-
-    private void CheckAgarre()
-    {
-        if (GetComponent<GrabbableItem>().IsAgarrado)
-        {
-            var r = gameObject.GetComponents<HandGrabInteractable>()[0].HandGrabPoses[0].HandPose.Handedness.ToString();
-            var restado = gameObject.GetComponents<HandGrabInteractable>()[0].State;
-            bool rtrigger = GameObject.Find("Jugador/TrackingSpace/RightHandAnchor").GetComponent<JoystickLocomotionOld>().IsGatilloTriggered();
-
-            var l = gameObject.GetComponents<HandGrabInteractable>()[1].HandGrabPoses[0].HandPose.Handedness.ToString();
-            var lestado = gameObject.GetComponents<HandGrabInteractable>()[1].State;
-            bool ltrigger = GameObject.Find("Jugador/TrackingSpace/LeftHandAnchor").GetComponent<JoystickLocomotionOld>().IsGatilloTriggered();
-
-            if ((restado == Oculus.Interaction.InteractableState.Select && rtrigger) || (lestado == Oculus.Interaction.InteractableState.Select && ltrigger))
-                estado = Estado.Encendido;
-            else
-                estado = Estado.Apagado;
-        }
-        else
-            estado = Estado.Apagado;
-
-        IsAgarrado = GetComponent<GrabbableItem>().IsAgarrado;
-    }
+    }    
 }
