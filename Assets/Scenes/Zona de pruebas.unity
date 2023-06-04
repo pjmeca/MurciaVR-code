@@ -15364,6 +15364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Indice: 0
+  testLimpiar: 0
 --- !u!1001 &804093870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16788,7 +16789,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1

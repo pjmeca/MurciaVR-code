@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FogActivator : MonoBehaviour
@@ -18,6 +18,17 @@ public class FogActivator : MonoBehaviour
         ps = esfera.GetComponent<ParticleSystem>();
 
         Hide(true);
+    }
+
+    private void Update()
+    {
+        if (CollidedFogs.Count > 0)
+        {
+            // La niebla puede haber cambiado de color
+            GameObject niebla = CollidedFogs.Last();
+
+            UpdateColor(niebla);
+        }       
     }
 
     void OnTriggerEnter(Collider collider)
