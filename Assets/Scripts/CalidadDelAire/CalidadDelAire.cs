@@ -117,22 +117,12 @@ public class CalidadDelAire
             throw new ArgumentException("El nivel de concentración no puede ser negativo.");
         }
 
-        if (SO2 <= BANDAS_CONCENTRACION[0,0])
+        for (int i = 0; i < 5; i++)
         {
-            return Indices.Buena;
-        } else if (SO2 <= BANDAS_CONCENTRACION[1, 0])
-        {
-            return Indices.RazonablementeBuena;
-        } else if (SO2 <= BANDAS_CONCENTRACION[2, 0])
-        {
-            return Indices.Regular;
-        } else if (SO2 <= BANDAS_CONCENTRACION[3, 0])
-        {
-            return Indices.Desfavorable;
-        } else if (SO2 <= BANDAS_CONCENTRACION[4, 0])
-        {
-            return Indices.MuyDesfavorable;
+            if (SO2 <= BANDAS_CONCENTRACION[i, 0])
+                return (Indices)i;
         }
+
         return Indices.ExtremadamenteDesfavorable;
     }
     private static Indices CalcularIndiceNO2(float NO2)
@@ -142,26 +132,12 @@ public class CalidadDelAire
             throw new ArgumentException("El nivel de concentración no puede ser negativo.");
         }
 
-        if (NO2 <= BANDAS_CONCENTRACION[0, 1])
+        for (int i = 0; i < 5; i++)
         {
-            return Indices.Buena;
+            if (NO2 <= BANDAS_CONCENTRACION[i, 1])
+                return (Indices)i;
         }
-        else if (NO2 <= BANDAS_CONCENTRACION[1, 1])
-        {
-            return Indices.RazonablementeBuena;
-        }
-        else if (NO2 <= BANDAS_CONCENTRACION[2, 1])
-        {
-            return Indices.Regular;
-        }
-        else if (NO2 <= BANDAS_CONCENTRACION[3, 1])
-        {
-            return Indices.Desfavorable;
-        }
-        else if (NO2 <= BANDAS_CONCENTRACION[4, 1])
-        {
-            return Indices.MuyDesfavorable;
-        }
+              
         return Indices.ExtremadamenteDesfavorable;
     }
     private static Indices CalcularIndicePM10(float PM10)
@@ -171,26 +147,12 @@ public class CalidadDelAire
             throw new ArgumentException("El nivel de concentración no puede ser negativo.");
         }
 
-        if (PM10 <= BANDAS_CONCENTRACION[0, 2])
+        for (int i = 0; i < 5; i++)
         {
-            return Indices.Buena;
+            if (PM10 <= BANDAS_CONCENTRACION[i, 2])
+                return (Indices)i;
         }
-        else if (PM10 <= BANDAS_CONCENTRACION[1, 2])
-        {
-            return Indices.RazonablementeBuena;
-        }
-        else if (PM10 <= BANDAS_CONCENTRACION[2, 2])
-        {
-            return Indices.Regular;
-        }
-        else if (PM10 <= BANDAS_CONCENTRACION[3, 2])
-        {
-            return Indices.Desfavorable;
-        }
-        else if (PM10 <= BANDAS_CONCENTRACION[4, 2])
-        {
-            return Indices.MuyDesfavorable;
-        }
+
         return Indices.ExtremadamenteDesfavorable;
     }
     private static Indices CalcularIndiceO3(float O3)
@@ -200,26 +162,12 @@ public class CalidadDelAire
             throw new ArgumentException("El nivel de concentración no puede ser negativo.");
         }
 
-        if (O3 <= BANDAS_CONCENTRACION[0, 3])
+        for (int i = 0; i < 5; i++)
         {
-            return Indices.Buena;
+            if (O3 <= BANDAS_CONCENTRACION[i, 3])
+                return (Indices)i;
         }
-        else if (O3 <= BANDAS_CONCENTRACION[1, 3])
-        {
-            return Indices.RazonablementeBuena;
-        }
-        else if (O3 <= BANDAS_CONCENTRACION[2, 3])
-        {
-            return Indices.Regular;
-        }
-        else if (O3 <= BANDAS_CONCENTRACION[3, 3])
-        {
-            return Indices.Desfavorable;
-        }
-        else if (O3 <= BANDAS_CONCENTRACION[4, 3])
-        {
-            return Indices.MuyDesfavorable;
-        }
+
         return Indices.ExtremadamenteDesfavorable;
     }
     private static Indices CalcularIndicePM25(float PM25)
@@ -229,26 +177,12 @@ public class CalidadDelAire
             throw new ArgumentException("El nivel de concentración no puede ser negativo.");
         }
 
-        if (PM25 <= BANDAS_CONCENTRACION[0, 4])
+        for (int i = 0; i < 5; i++)
         {
-            return Indices.Buena;
+            if (PM25 <= BANDAS_CONCENTRACION[i, 4])
+                return (Indices)i;
         }
-        else if (PM25 <= BANDAS_CONCENTRACION[1, 4])
-        {
-            return Indices.RazonablementeBuena;
-        }
-        else if (PM25 <= BANDAS_CONCENTRACION[2, 4])
-        {
-            return Indices.Regular;
-        }
-        else if (PM25 <= BANDAS_CONCENTRACION[3, 4])
-        {
-            return Indices.Desfavorable;
-        }
-        else if (PM25 <= BANDAS_CONCENTRACION[4, 4])
-        {
-            return Indices.MuyDesfavorable;
-        }
+
         return Indices.ExtremadamenteDesfavorable;
     }
     #endregion
