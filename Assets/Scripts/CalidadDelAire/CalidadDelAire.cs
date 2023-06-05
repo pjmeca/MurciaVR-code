@@ -9,6 +9,7 @@ public class CalidadDelAire
     #region PROPIEDADES
 
     #region GLOBALES
+    public const float MIN_ALPHA = 0.2f;
     public enum Indices
     {
         Buena,
@@ -187,6 +188,65 @@ public class CalidadDelAire
     }
     #endregion
     #endregion
+
+    /// <summary>
+    /// Calcula el porcentaje de contaminación dentro del índice actual.
+    /// </summary>
+    /// <returns>Un valor (0f-1f) que representa el porcentaje de distancia
+    /// respecto al índice anterior (0 es índice menor, 1 es índice mayor).</returns>
+    public float ContaminacionEnIndice()
+    {
+        // Obtener las diferencias y quedarnos con la mayor
+        // Pasar esa diferencia al término relativo respecto al anterior y al sucesor
+
+        float maxDiferencia = 0;
+        int bandaElegida = 0;
+        int nivelBanda = 0;
+        for(int j = 0; j < BANDAS_CONCENTRACION.GetLength(1); j++)
+        {
+            float diferencia = 0;
+            int banda = 0;
+            for (int i=0; i < BANDAS_CONCENTRACION.GetLength(0); i++)
+            {                
+                float resta = Concentraciones[j] - BANDAS_CONCENTRACION[i, j];
+
+                // Si es negativa -> fin bucle interno
+                if (resta < 0)
+                    break;
+
+                // Si esta es positiva -> actualizar diferencia                
+                diferencia = resta;
+                banda = i;
+            }
+
+            // Si es mayor que la maxDiferencia, actualizar maxDiferencia = diferencia, bandaElegida = j, nivelBandaElegida = i+1
+            if(diferencia > maxDiferencia)
+            {
+                maxDiferencia = diferencia;
+                bandaElegida = j;
+                nivelBanda = banda;
+            }
+        }
+        // Calcular valor relativo con bandaElegida, nivelBandaElegida (cuidado caso último nivel) y maxDiferencia
+
+        // Se sale de la escala
+        if ((nivelBanda+1) == BANDAS_CONCENTRACION.GetLength(0))
+            return 1f;
+
+        var resultado = Utils.Remap(Concentraciones[bandaElegida], BANDAS_CONCENTRACION[nivelBanda, bandaElegida], BANDAS_CONCENTRACION[nivelBanda+1, bandaElegida], 0f, 1f);
+
+        return resultado;
+    }
+
+    /// <summary>
+    /// Devuelve el alpha correspondiente para el nivel de calidad
+    /// </summary>
+    /// <param name="c"></param>
+    /// <returns></returns>
+    public float GetAlpha()
+    {
+        return Utils.Remap((int)Indice, 0, NumIndices, MIN_ALPHA, 1.0f);
+    }
 
     /// <summary>
     /// Reduce las concentraciones proporcionalmente como resultado de una limpieza de aire.

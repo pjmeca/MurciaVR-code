@@ -10,7 +10,6 @@ public class Fog : MonoBehaviour
 {
     #region PROPIEDADES
     #region GLOBALES
-    public const float MIN_ALPHA = 0.2f;
     private readonly static Vector3[] _scales =
     {
         new Vector3(1,1,1),
@@ -44,7 +43,7 @@ public class Fog : MonoBehaviour
     {
         get
         {
-            return new ParticleSystem.MinMaxGradient(CrearGradiente(Calidad.Color, GetAlpha(Calidad)));
+            return new ParticleSystem.MinMaxGradient(CrearGradiente(Calidad.Color, Calidad.GetAlpha()));
         }
     }
     #endregion
@@ -60,7 +59,8 @@ public class Fog : MonoBehaviour
         INITIAL_RADIUS = _sphereCollider.radius;
 
         //Calidad = new();
-        Calidad = new(4.8f, 8.3f, 20.55f, 23.8f, 0); // Mediciones 03/06/23 en San Basilio
+        //Calidad = new(4.8f, 8.3f, 20.55f, 23.8f, 0); // Mediciones 03/06/23 en San Basilio
+        Calidad = new(1000f, 400f, 170f, 400f, 0); // Mediciones 03/06/23 en San Basilio
         Indice = Calidad.Indice;
     }
 
@@ -71,12 +71,13 @@ public class Fog : MonoBehaviour
         Indice = Calidad.Indice;
         //Debug.Log($"[{string.Join(",", Calidad.Concentraciones)}]");
 
+        // Actualizar el tamaño
+        UpdateSize();
+
         if (_prevIndice == null || _prevIndice != Calidad.Indice)
         {
             // Actualizar el color
-            UpdateGradient();
-            // Actualizar el tamaño
-            UpdateSize();
+            UpdateGradient();           
 
             _prevIndice = Calidad.Indice;
         }        
@@ -92,15 +93,21 @@ public class Fog : MonoBehaviour
 
     private void UpdateSize()
     {
+        float porcentajeContaminacion = Calidad.ContaminacionEnIndice();
+
         var shape = _particleSystem.shape;
-        shape.scale = _scales[(int)Calidad.Indice];
+        shape.scale = new Vector3(
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice-1].x, _scales[(int)Calidad.Indice].x),
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice-1].y, _scales[(int)Calidad.Indice].y),
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice-1].z, _scales[(int)Calidad.Indice].z)
+        );
         var emission = _particleSystem.emission;
         var rateOverTime = emission.rateOverTime;
         rateOverTime.constant = _rateOverTime[(int)Calidad.Indice];
         emission.rateOverTime = rateOverTime;
 
         // Actualizar también el tamaño del collider
-        _sphereCollider.radius = INITIAL_RADIUS * _scales[(int)Calidad.Indice].x;
+        _sphereCollider.radius = INITIAL_RADIUS * _scales[(int)Calidad.Indice].x * porcentajeContaminacion;
     }
 
     /// <summary>
@@ -130,23 +137,7 @@ public class Fog : MonoBehaviour
         gradient.SetKeys(colorKey, alphaKey);
 
         return gradient;
-    }
-
-    /// <summary>
-    /// Devuelve el alpha correspondiente para el nivel de calidad
-    /// </summary>
-    /// <param name="c"></param>
-    /// <returns></returns>
-    private float GetAlpha(CalidadDelAire c)
-    {
-        return Remap((int)c.Indice, 0, CalidadDelAire.NumIndices, MIN_ALPHA, 1.0f);
-    }
-
-    // https://forum.unity.com/threads/re-map-a-number-from-one-range-to-another.119437/
-    private float Remap(float s, float a1, float a2, float b1, float b2)
-    {
-        return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
-    }
+    }       
     #endregion
 
     #region FUNCIONALIDAD
