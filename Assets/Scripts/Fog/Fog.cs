@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// <summary>
@@ -35,6 +36,11 @@ public class Fog : MonoBehaviour
     private SphereCollider _sphereCollider;
     private float INITIAL_RADIUS;
 
+    public float ContaminacionSO2 = 1000f;
+    public float ContaminacionNO2 = 400f;
+    public float ContaminacionPM10 = 170f;
+    public float ContaminacionO3 = 400f;
+    public float ContaminacionPM25 = 0;
     public CalidadDelAire Calidad;
     public CalidadDelAire.Indices Indice; // Control manual del índice (para desarrollo, no se usará en producción)
 
@@ -57,9 +63,7 @@ public class Fog : MonoBehaviour
 
         INITIAL_RADIUS = _sphereCollider.radius;
 
-        //Calidad = new();
-        //Calidad = new(4.8f, 8.3f, 20.55f, 23.8f, 0); // Mediciones 03/06/23 en San Basilio
-        Calidad = new(1000f, 400f, 170f, 400f, 0); // Mediciones 03/06/23 en San Basilio
+        Calidad = new(ContaminacionSO2, ContaminacionNO2, ContaminacionPM10, ContaminacionO3, ContaminacionPM25);
         Indice = Calidad.Indice;
     }
 
@@ -68,7 +72,11 @@ public class Fog : MonoBehaviour
         // Comprobar si se ha cambiado el índice (desde el Inspector)
         Calidad.Indice = Indice;
         Indice = Calidad.Indice;
-        //Debug.Log($"[{string.Join(",", Calidad.Concentraciones)}]");
+        ContaminacionSO2 = Calidad.Concentraciones[0];
+        ContaminacionNO2 = Calidad.Concentraciones[1];
+        ContaminacionPM10 = Calidad.Concentraciones[2];
+        ContaminacionO3 = Calidad.Concentraciones[3];
+        ContaminacionPM25 = Calidad.Concentraciones[4];
 
         // Actualizar el tamaño
         UpdateSize();

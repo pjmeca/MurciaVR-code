@@ -15692,6 +15692,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73a4e9b9ffdd7d449d4d95554d62bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ContaminacionSO2: 1000
+  ContaminacionNO2: 400
+  ContaminacionPM10: 170
+  ContaminacionO3: 400
+  ContaminacionPM25: 0
   Indice: 0
   testLimpiar: 0
 --- !u!1001 &804093870
@@ -16996,7 +17001,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-11632
+  m_Name: pb_Mesh29512
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
