@@ -42,7 +42,7 @@ public class CalidadDelAire
         /*Extremadamente desfavorable*/{1250,1000, 1200, 800,   800},
     };
 
-    public static readonly float SPEED_LIMPIEZA = 100f;
+    public static readonly float SPEED_LIMPIEZA = 500f;
     #endregion
 
     #region DE OBJETO
@@ -59,7 +59,30 @@ public class CalidadDelAire
             _indice = value;
         }
     }
-    public Color Color { get { return _colores[(int)Indice]; } }
+    public Color Color { 
+        get 
+        {
+            // Cambia el color progresivamente en base al nivel de contaminación
+            // Nota: es posible que, en base a los niveles de contaminación, siga habiendo
+            // cambios bruscos en el color, pero evitar esto implicaría mostrar erróneamente
+            // los valores de contaminación actuales.
+            float porcentajeContaminacion = ContaminacionEnIndice();
+            Color colorActual = _colores[(int)Indice];
+            Color colorAnterior = Indice == 0 ? colorActual : _colores[(int)Indice - 1];            
+
+            var r = Utils.RelativeToRealValue(porcentajeContaminacion, colorAnterior.r, colorActual.r);
+            var g = Utils.RelativeToRealValue(porcentajeContaminacion, colorAnterior.g, colorActual.g);
+            var b = Utils.RelativeToRealValue(porcentajeContaminacion, colorAnterior.b, colorActual.b);
+            return new Color(r, g, b); 
+        } 
+    }
+    public float Alpha
+    {
+        get
+        {
+            return Utils.Remap((int)Indice, 0, NumIndices, MIN_ALPHA, 1.0f);
+        }
+    }
     public float[] Concentraciones {  get; private set; }
     #endregion
 
@@ -236,16 +259,6 @@ public class CalidadDelAire
         var resultado = Utils.Remap(Concentraciones[bandaElegida], BANDAS_CONCENTRACION[nivelBanda, bandaElegida], BANDAS_CONCENTRACION[nivelBanda+1, bandaElegida], 0f, 1f);
 
         return resultado;
-    }
-
-    /// <summary>
-    /// Devuelve el alpha correspondiente para el nivel de calidad
-    /// </summary>
-    /// <param name="c"></param>
-    /// <returns></returns>
-    public float GetAlpha()
-    {
-        return Utils.Remap((int)Indice, 0, NumIndices, MIN_ALPHA, 1.0f);
     }
 
     /// <summary>

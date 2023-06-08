@@ -27,11 +27,18 @@ public class Utils
     /// </summary>
     public static float RelativeToRealValue(float position, float start, float end)
     {
+        // Si es mayor, hay que ir al revés (tomar el rango opuesto)
+        if (start > end)
+        {
+            (start, end) = (end, start);
+            position = 1f - position;
+        }
+
         if (position < 0f || position > 1f)
         {
             throw new ArgumentException("La posicion debe encontrarse entre 0f y 1f.");
         }
 
-        return position * end + start;
+        return Mathf.Lerp(start, end, position);
     }
 }

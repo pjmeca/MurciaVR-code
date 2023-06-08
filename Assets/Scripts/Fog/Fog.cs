@@ -37,13 +37,12 @@ public class Fog : MonoBehaviour
 
     public CalidadDelAire Calidad;
     public CalidadDelAire.Indices Indice; // Control manual del índice (para desarrollo, no se usará en producción)
-    private CalidadDelAire.Indices? _prevIndice = null;
 
     public ParticleSystem.MinMaxGradient Gradiente
     {
         get
         {
-            return new ParticleSystem.MinMaxGradient(CrearGradiente(Calidad.Color, Calidad.GetAlpha()));
+            return new ParticleSystem.MinMaxGradient(CrearGradiente(Calidad.Color, Calidad.Alpha));
         }
     }
     #endregion
@@ -74,13 +73,8 @@ public class Fog : MonoBehaviour
         // Actualizar el tamaño
         UpdateSize();
 
-        if (_prevIndice == null || _prevIndice != Calidad.Indice)
-        {
-            // Actualizar el color
-            UpdateGradient();           
-
-            _prevIndice = Calidad.Indice;
-        }        
+        // Actualizar el color
+        UpdateGradient();       
     }
     #endregion
 
