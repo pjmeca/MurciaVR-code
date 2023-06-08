@@ -42,7 +42,7 @@ public class Fog : MonoBehaviour
     public float ContaminacionO3 = 400f;
     public float ContaminacionPM25 = 0;
     public CalidadDelAire Calidad;
-    public CalidadDelAire.Indices Indice; // Control manual del índice (para desarrollo, no se usará en producción)
+    public CalidadDelAire.Indices Indice;
 
     public ParticleSystem.MinMaxGradient Gradiente
     {
