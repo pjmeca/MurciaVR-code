@@ -52,8 +52,17 @@ public class Fog : MonoBehaviour
         }
     }
     #endregion
-
     #endregion
+
+    public Fog() { }
+    public Fog(float ContaminacionSO2, float ContaminacionNO2, float ContaminacionPM10, float ContaminacionO3, float ContaminacionPM25)
+    {
+        this.ContaminacionSO2 = ContaminacionSO2;
+        this.ContaminacionNO2 = ContaminacionNO2;
+        this.ContaminacionPM10 = ContaminacionPM10;
+        this.ContaminacionO3 = ContaminacionO3;
+        this.ContaminacionPM25 = ContaminacionPM25;
+    }
 
     #region MÉTODOS UNITY
     public void Start()
