@@ -95,6 +95,15 @@ public class Fog : MonoBehaviour
     {
         float porcentajeContaminacion = Calidad.ContaminacionEnIndice();
 
+        if (porcentajeContaminacion == 0)
+        {
+            _particleSystem.Stop();
+        }
+        else if (_particleSystem.isStopped)
+        {
+            _particleSystem.Play();
+        }
+
         var shape = _particleSystem.shape;
         shape.scale = new Vector3(
             Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice-1].x, _scales[(int)Calidad.Indice].x),
@@ -107,7 +116,7 @@ public class Fog : MonoBehaviour
         emission.rateOverTime = rateOverTime;
 
         // Actualizar también el tamaño del collider
-        _sphereCollider.radius = INITIAL_RADIUS * _scales[(int)Calidad.Indice].x * porcentajeContaminacion;
+        _sphereCollider.radius = INITIAL_RADIUS * Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].x, _scales[(int)Calidad.Indice].x);
     }
 
     /// <summary>

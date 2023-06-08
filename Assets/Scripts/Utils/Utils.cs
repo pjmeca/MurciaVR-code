@@ -12,6 +12,12 @@ public class Utils
     /// </summary>
     public static float Remap(float s, float a1, float a2, float b1, float b2)
     {
+        if (a1 > a2 || b1 > b2)
+            throw new ArgumentException("Los rangos no son válidos.");
+
+        if (s < a1)
+            s = a1;
+
         return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
     }
 
@@ -21,7 +27,7 @@ public class Utils
     /// </summary>
     public static float RelativeToRealValue(float position, float start, float end)
     {
-        if (position < 0 || position > 1f)
+        if (position < 0f || position > 1f)
         {
             throw new ArgumentException("La posicion debe encontrarse entre 0f y 1f.");
         }
