@@ -14,7 +14,7 @@ public class MovimientoCiudad : MonoBehaviour
     public GameObject jugador;
 
     [SerializeField]
-    public MapRenderer mapRenderer;
+    public MapRenderer mapRenderer; // mapa central
 
     // Perímetro máximo dentro del cual no se actualizará la posición del mapa
     [Range(0, 500)]
@@ -32,22 +32,24 @@ public class MovimientoCiudad : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("MeshFilter " + mapRenderer.gameObject.GetComponent("MeshFilter"));
         // Obtener la posición del jugador
         var posX = jugador.transform.position.x;
         var posZ = jugador.transform.position.z;
 
         // Calcular la diferencia respecto a la última posición
-        difX += posX - transform.position.x;
-        difZ += posZ - transform.position.z;
+        difX += posX - mapRenderer.transform.position.x;
+        difZ += posZ - mapRenderer.transform.position.z;
 
         //Debug.Log("posX: "+posX + " posZ: "+posZ+" difX:" + difX+" difZ:"+difZ);
 
         // Comprobar si se ha salido del perímetro
         if(Mathf.Abs(difX) > perimetro || Mathf.Abs(difZ) > perimetro)
         {
+            var difMapX = transform.position.x - mapRenderer.gameObject.transform.position.x;
+            var difMapZ = transform.position.z - mapRenderer.gameObject.transform.position.z;
+
             // Mover el mapa
-            MoverMapa(posX, posZ);
+            MoverMapa(posX + difMapX, posZ + difMapZ);
 
             // Reestablecer los acumuladores
             difX = difZ = 0;
@@ -65,13 +67,13 @@ public class MovimientoCiudad : MonoBehaviour
         transform.position = temp;
 
         // Actualizar las coordenadas del mapa para mostrar el desplazamiento
-        var zoom = mapRenderer.ZoomLevel;
+        var zoom = GetComponent<MapRenderer>().ZoomLevel;
         MapChanger(latLon.LatitudeInDegrees, latLon.LongitudeInDegrees, zoom);
     }
 
     // Basado en: https://seirios48.medium.com/whats-is-microsoft-map-sdk-can-6a7521be3c32
     public void MapChanger(double lat, double lon, float zoom)
     {
-        mapRenderer.SetMapScene(new MapSceneOfLocationAndZoomLevel(new LatLon(lat, lon), zoom), MapSceneAnimationKind.None);
+        GetComponent<MapRenderer>().SetMapScene(new MapSceneOfLocationAndZoomLevel(new LatLon(lat, lon), zoom), MapSceneAnimationKind.None);
     }
 }
