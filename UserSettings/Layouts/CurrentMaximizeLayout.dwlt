@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 29458
+  controlID: 23
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -87,7 +87,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 29459
+  controlID: 24
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 29460
+  controlID: 25
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -226,9 +226,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 8c730000
-      m_LastClickedID: 29580
-      m_ExpandedIDs: aeedffff16fbffff20fbffff2afbffffcc730000
+      m_SelectedIDs: 3252ffff
+      m_LastClickedID: -44494
+      m_ExpandedIDs: b869ffff4e7fffff68a9ffff76a9ffffc4b0ffffacb2ffff54b4ffff2afbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -501,7 +501,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       floating: 0
       collapsed: 0
-      displayed: 0
+      displayed: 1
       snapOffset: {x: 0, y: 25}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
@@ -540,9 +540,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.6104593, y: 0.00000031534378, z: -0.5476217}
+    m_Target: {x: -1.8402659, y: -5.02168, z: -28.83082}
     speed: 2
-    m_Value: {x: -0.6104593, y: 0.00000031534378, z: -0.5476217}
+    m_Value: {x: -1.8402659, y: -5.02168, z: -28.83082}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -589,20 +589,20 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.4360811, y: -0.55243987, z: 0.42287746, w: -0.5715891}
+    m_Target: {x: 0.0025113036, y: -0.996666, z: 0.08540535, w: 0.017040033}
     speed: 2
-    m_Value: {x: -0.4358859, y: -0.55219257, z: 0.42268816, w: -0.5713332}
+    m_Value: {x: 0.0027662166, y: -0.99614537, z: 0.085357584, w: 0.020020602}
   m_Size:
-    m_Target: 14.188156
+    m_Target: 31.334242
     speed: 2
-    m_Value: 14.188156
+    m_Value: 31.334242
   m_Ortho:
     m_Target: 0
     speed: 2
     m_Value: 0
   m_CameraSettings:
-    m_Speed: 0.4279
-    m_SpeedNormalized: 0.21
+    m_Speed: 0.8458
+    m_SpeedNormalized: 0.42
     m_SpeedMin: 0.01
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -761,9 +761,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 50a50200
-    m_LastClickedID: 173392
-    m_ExpandedIDs: 00000000869e000000ca9a3bffffff7f
+    m_SelectedIDs: 709f0000
+    m_LastClickedID: 40816
+    m_ExpandedIDs: 00000000829e00007c9f000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -791,7 +791,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000869e000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000829e0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -816,9 +816,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 8c730000
-    m_LastClickedInstanceID: 29580
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: 3252ffff
+    m_LastClickedInstanceID: -44494
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c62300000000000080a10000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -912,7 +912,7 @@ MonoBehaviour:
   m_ChildContainers: []
   m_MaskingEnabled: 1
   m_FarthestPageCompleted: -1
-  m_PlayModeChanging: 0
+  m_PlayModeChanging: 1
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
