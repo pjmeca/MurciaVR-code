@@ -45,7 +45,7 @@ public class MovimientoCiudad : MonoBehaviour
         //Debug.Log("posX: "+posX + " posZ: "+posZ+" difX:" + difX+" difZ:"+difZ);
 
         // Comprobar si se ha salido del perímetro
-        if(!(Mathf.Abs(difX) < perimetro || Mathf.Abs(difZ) < perimetro))
+        if(Mathf.Abs(difX) > perimetro || Mathf.Abs(difZ) > perimetro)
         {
             // Mover el mapa
             MoverMapa(posX, posZ);
