@@ -14,12 +14,13 @@ public class JoystickLocomotion : MonoBehaviour
     public float velocidadRotar = 60;
 
     [Header("Volar")]
-    public bool isActive = true;
+    public bool IsActiveVolar = true;
     public float velocidad = 1;
     private bool gravityActiveState;
     private float ajusteVuelo;
 
     [Header("Ajuste de altitud")]
+    public bool IsActiveAjusteAltitud = false;
     [SerializeField]
     public MapRenderer mapa;
     [Range(0, 20)]
@@ -60,14 +61,14 @@ public class JoystickLocomotion : MonoBehaviour
     {
         caminar();        // 1
         rotar();          // 2
-        volar();          // 3
+        volar();          // 3        
         ajustarAltitud(); // 4
 
         playerRB.position = new Vector3(nuevaPosX, nuevaPosY, nuevaPosZ);
 
-        ultimaPosX = posX;
-        ultimaPosY = posY;
-        ultimaPosZ = posZ;
+        ultimaPosX = nuevaPosX;
+        ultimaPosY = nuevaPosY;
+        ultimaPosZ = nuevaPosZ;
     }
 
     // https://www.youtube.com/watch?v=rwGv1rmm1kQ
@@ -92,9 +93,9 @@ public class JoystickLocomotion : MonoBehaviour
     void volar()
     {
         // Desactivamos la gravedad
-        GetComponent<Rigidbody>().useGravity = !isActive && gravityActiveState;
+        GetComponent<Rigidbody>().useGravity = !IsActiveVolar && gravityActiveState;
 
-        if (isActive)
+        if (IsActiveVolar)
         {
             var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
@@ -108,10 +109,10 @@ public class JoystickLocomotion : MonoBehaviour
     void ajustarAltitud()
     {
         // Si ha cambiado respecto a la última posición
-        if (Mathf.Abs(posX) < Mathf.Abs(ultimaPosX) - precision || Mathf.Abs(posX) > Mathf.Abs(ultimaPosX) + precision
-            || Mathf.Abs(posZ) < Mathf.Abs(ultimaPosZ) - precision || Mathf.Abs(posZ) > Mathf.Abs(ultimaPosZ) + precision)
+        if (IsActiveAjusteAltitud && (Mathf.Abs(posX) < Mathf.Abs(ultimaPosX) - precision || Mathf.Abs(posX) > Mathf.Abs(ultimaPosX) + precision
+            || Mathf.Abs(posZ) < Mathf.Abs(ultimaPosZ) - precision || Mathf.Abs(posZ) > Mathf.Abs(ultimaPosZ) + precision))
         {
-            actualizarPosicion(posX, posZ);
+            actualizarPosicion(posX, posZ);            
         }
         // Si no
         else
@@ -139,7 +140,7 @@ public class JoystickLocomotion : MonoBehaviour
             + latlon.LatitudeInDegrees.ToString(new CultureInfo("en-US")) + ", " + latlon.LongitudeInDegrees.ToString(new CultureInfo("en-US"))
             + "&key=" + key;
         StartCoroutine(GetText(url, OnTextReceived));
-        // Nos quedamos esperando en OnTextReceived para seguir        
+        // Nos quedamos esperando en OnTextReceived para seguir 
     }
 
     IEnumerator GetText(string url, System.Action<string> callback)

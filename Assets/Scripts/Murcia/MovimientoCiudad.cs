@@ -6,6 +6,7 @@
 using UnityEngine;
 using Microsoft.Maps.Unity;
 using Microsoft.Geospatial;
+using Unity.VisualScripting;
 
 public class MovimientoCiudad : MonoBehaviour
 {
@@ -38,13 +39,13 @@ public class MovimientoCiudad : MonoBehaviour
         difX += posX - mapRenderer.transform.position.x;
         difZ += posZ - mapRenderer.transform.position.z;
 
-        //Debug.Log("posX: "+posX + " posZ: "+posZ+" difX:" + difX+" difZ:"+difZ);
+        // Debug.Log("posX: "+posX + " posZ: "+posZ+" difX:" + difX+" difZ:"+difZ);
 
         // Comprobar si se ha salido del perímetro
-        if(Mathf.Abs(difX) > perimetro || Mathf.Abs(difZ) > perimetro)
+        if(Mathf.Abs(difX) + Mathf.Abs(difZ) > perimetro)
         {
-            var difMapX = transform.position.x - mapRenderer.gameObject.transform.position.x;
-            var difMapZ = transform.position.z - mapRenderer.gameObject.transform.position.z;
+            var difMapX = transform.position.x - mapRenderer.transform.position.x;
+            var difMapZ = transform.position.z - mapRenderer.transform.position.z;
 
             // Mover el mapa
             MoverMapa(posX + difMapX, posZ + difMapZ);
