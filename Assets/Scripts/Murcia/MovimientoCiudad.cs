@@ -3,8 +3,6 @@
 // para que se mueva con el jugador.
 //
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.Maps.Unity;
 using Microsoft.Geospatial;

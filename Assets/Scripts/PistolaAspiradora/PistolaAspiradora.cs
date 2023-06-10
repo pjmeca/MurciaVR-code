@@ -1,9 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Oculus.Interaction.HandGrab;
-using Oculus.Interaction.Input;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class PistolaAspiradora : MonoBehaviour

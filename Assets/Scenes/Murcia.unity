@@ -12158,8 +12158,8 @@ MonoBehaviour:
   _numElevationTileFallbackLods: 0
   _requestTilesAroundView: 1
   _center:
-    _latitude: 37.98221
-    _longitude: -1.12931399999999
+    _latitude: 37.9854
+    _longitude: -1.129289
   _zoomLevel: 20
   _minimumZoomLevel: 1
   _maximumZoomLevel: 20
@@ -24299,8 +24299,8 @@ MonoBehaviour:
   _numElevationTileFallbackLods: 0
   _requestTilesAroundView: 1
   _center:
-    _latitude: 37.98221
-    _longitude: -1.12931399999999
+    _latitude: 37.9838
+    _longitude: -1.12723
   _zoomLevel: 20
   _minimumZoomLevel: 1
   _maximumZoomLevel: 20
@@ -36043,8 +36043,8 @@ MonoBehaviour:
   _numElevationTileFallbackLods: 0
   _requestTilesAroundView: 1
   _center:
-    _latitude: 37.98221
-    _longitude: -1.12931399999999
+    _latitude: 37.98375
+    _longitude: -1.13135
   _zoomLevel: 20
   _minimumZoomLevel: 1
   _maximumZoomLevel: 20

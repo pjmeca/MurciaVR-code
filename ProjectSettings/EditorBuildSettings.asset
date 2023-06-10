@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Zona de pruebas.unity
     guid: abcdd65a42c11c74f9468e861f2d47d4
+  - enabled: 1
+    path: Assets/Scenes/Murcia.unity
+    guid: a16ac16583160f04abc88f348e543fb3
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260,
       type: 2}
