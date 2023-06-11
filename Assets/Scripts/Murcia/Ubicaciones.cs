@@ -1,14 +1,13 @@
 using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
-using Oculus.Platform.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class Ubicaciones : MonoBehaviour
 {
-    public MapRenderer mapRenderer;
+    [Inject]
+    private MapRenderer mapRenderer;
 
     [SerializeField]
     public Ubicacion ubicacion = Ubicacion.Catedral;

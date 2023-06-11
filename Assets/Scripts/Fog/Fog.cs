@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.Maps.Unity;
 using UnityEngine;
+using Zenject;
 
 /// <summary>
 /// Identifica las propiedades de la niebla, como el color o el tamaño.
@@ -9,6 +11,11 @@ using UnityEngine;
 [RequireComponent(typeof(ParticleSystem))]
 public class Fog : MonoBehaviour
 {
+    [Inject]
+    private ICalidadDelAireService calidadDelAireService;
+    [Inject]
+    private MapRenderer mapRenderer;
+
     #region PROPIEDADES
     #region GLOBALES
     private readonly static Vector3[] _scales =
@@ -55,14 +62,6 @@ public class Fog : MonoBehaviour
     #endregion
 
     public Fog() { }
-    public Fog(float ContaminacionSO2, float ContaminacionNO2, float ContaminacionPM10, float ContaminacionO3, float ContaminacionPM25)
-    {
-        this.ContaminacionSO2 = ContaminacionSO2;
-        this.ContaminacionNO2 = ContaminacionNO2;
-        this.ContaminacionPM10 = ContaminacionPM10;
-        this.ContaminacionO3 = ContaminacionO3;
-        this.ContaminacionPM25 = ContaminacionPM25;
-    }
 
     #region MÉTODOS UNITY
     public void Start()
@@ -72,7 +71,10 @@ public class Fog : MonoBehaviour
 
         INITIAL_RADIUS = _sphereCollider.radius;
 
-        Calidad = new(ContaminacionSO2, ContaminacionNO2, ContaminacionPM10, ContaminacionO3, ContaminacionPM25);
+        // Obtener la calidad del aire
+        // Primero, obtener su latitud/longitud a partir de su posición
+        var posicion = mapRenderer.TransformWorldPointToLatLon(transform.position);
+        Calidad = calidadDelAireService.GetByLatLon(posicion.LatitudeInDegrees, posicion.LongitudeInDegrees);
         Indice = Calidad.Indice;
     }
 

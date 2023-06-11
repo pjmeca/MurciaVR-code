@@ -4,6 +4,7 @@ using Microsoft.Maps.Unity;
 using System.Globalization;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using Zenject;
 
 public class JoystickLocomotion : MonoBehaviour
 {
@@ -21,8 +22,8 @@ public class JoystickLocomotion : MonoBehaviour
 
     [Header("Ajuste de altitud")]
     public bool IsActiveAjusteAltitud = false;
-    [SerializeField]
-    public MapRenderer mapa;
+    [Inject]
+    private MapRenderer mapa;
     [Range(0, 20)]
     public float precision = 10; // importante!!! si es demasiado bajo, la API puede quejarse de que hagamos demasiadas peticiones
     [Range(-50, 50)]
