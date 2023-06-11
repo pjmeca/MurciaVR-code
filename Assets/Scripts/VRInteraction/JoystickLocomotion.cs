@@ -41,8 +41,8 @@ public class JoystickLocomotion : MonoBehaviour
 
     [Header("Límites de altura")]
     public float alturaMinima = 0;
-    public float alturaMaxima = 20; 
-    private float ultimaAltitud = 0; 
+    public float alturaMaxima = 20;
+    private float ultimaAltitud = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -87,7 +87,7 @@ public class JoystickLocomotion : MonoBehaviour
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
-        if(Mathf.Abs(joystickAxis.x) >= zonaMuertaRotar)
+        if (Mathf.Abs(joystickAxis.x) >= zonaMuertaRotar)
             transform.Rotate(velocidadRotar * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
     }
 
@@ -113,7 +113,7 @@ public class JoystickLocomotion : MonoBehaviour
         if (IsActiveAjusteAltitud && (Mathf.Abs(posX) < Mathf.Abs(ultimaPosX) - precision || Mathf.Abs(posX) > Mathf.Abs(ultimaPosX) + precision
             || Mathf.Abs(posZ) < Mathf.Abs(ultimaPosZ) - precision || Mathf.Abs(posZ) > Mathf.Abs(ultimaPosZ) + precision))
         {
-            actualizarPosicion(posX, posZ);            
+            actualizarPosicion(posX, posZ);
         }
         // Si no
         else
@@ -121,14 +121,14 @@ public class JoystickLocomotion : MonoBehaviour
             // Aplicamos el vuelo
             // Las alturas se miden en base a la última altitud calculada para evitar problemas (p.ej. con las montañas)
             nuevaPosY += ajusteVuelo;
-            nuevaPosY = nuevaPosY > (ultimaAltitud+alturaMaxima) ? ultimaAltitud+alturaMaxima : nuevaPosY;   
+            nuevaPosY = nuevaPosY > (ultimaAltitud + alturaMaxima) ? ultimaAltitud + alturaMaxima : nuevaPosY;
             nuevaPosY = nuevaPosY < alturaMinima ? alturaMinima : nuevaPosY;
         }
     }
 
     void actualizarPosicion(float posX, float posZ)
     {
-        if(!mapa)
+        if (!mapa)
             return;
         // Convertirla a latitud/longitud mediante el mapa
         var temp = new Vector3(posX, 0, posZ);
@@ -176,32 +176,33 @@ public class JoystickLocomotion : MonoBehaviour
         ultimaAltitud = posY;
         nuevaPosY = posY;
     }
-}
 
-// Clases para el JSON
-[System.Serializable]
-public class Resource
-{
-    public string __type;
-    public List<int> elevations;
-    public int zoomLevel;
-}
 
-[System.Serializable]
-public class ResourceSet
-{
-    public int estimatedTotal;
-    public List<Resource> resources;
-}
+    // Clases para el JSON
+    [System.Serializable]
+    public class Resource
+    {
+        public string __type;
+        public List<int> elevations;
+        public int zoomLevel;
+    }
 
-[System.Serializable]
-public class Resultado
-{
-    public string authenticationResultCode;
-    public string brandLogoUri;
-    public string copyright;
-    public List<ResourceSet> resourceSets;
-    public int statusCode;
-    public string statusDescription;
-    public string traceId;
+    [System.Serializable]
+    public class ResourceSet
+    {
+        public int estimatedTotal;
+        public List<Resource> resources;
+    }
+
+    [System.Serializable]
+    public class Resultado
+    {
+        public string authenticationResultCode;
+        public string brandLogoUri;
+        public string copyright;
+        public List<ResourceSet> resourceSets;
+        public int statusCode;
+        public string statusDescription;
+        public string traceId;
+    }
 }
