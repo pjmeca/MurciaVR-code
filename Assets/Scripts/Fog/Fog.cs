@@ -71,8 +71,14 @@ public class Fog : MonoBehaviour
 
         INITIAL_RADIUS = _sphereCollider.radius;
 
-        // Obtener la calidad del aire
-        // Primero, obtener su latitud/longitud a partir de su posición
+        // Para obtener la calidad del aire hay que esperar a que el servicio se haya inicializado
+        Eventos.CalidadDelAireServiceReady += DeferredStart;
+        Calidad = new();
+    }
+
+    private void DeferredStart()
+    {
+        // Obtener su latitud/longitud a partir de su posición
         var posicion = mapRenderer.TransformWorldPointToLatLon(transform.position);
         Calidad = calidadDelAireService.GetByLatLon(posicion.LatitudeInDegrees, posicion.LongitudeInDegrees);
         Indice = Calidad.Indice;

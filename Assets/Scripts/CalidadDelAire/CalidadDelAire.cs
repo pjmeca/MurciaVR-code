@@ -100,6 +100,7 @@ public class CalidadDelAire
 
         Concentraciones = new float[] { SO2, NO2, PM10, O3, PM25 };
     }
+    public CalidadDelAire() : this(0f, 0f, 0f, 0f, 0f) { }
     #endregion
 
     #region CALCULAR EL ÍNDICE DE CALIDAD DEL AIRE

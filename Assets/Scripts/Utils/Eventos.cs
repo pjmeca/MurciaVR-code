@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+/// <summary>
+/// Reúne todos los eventos de la aplicación.<br />
+/// Como hay pocos eventos, quedan todos declarados en esta clase
+/// para facilitar su consulta y modificación.
+/// </summary>
 public class Eventos
 {
     #region PISTOLA ASPIRADORA
@@ -17,6 +18,15 @@ public class Eventos
     public static void LanzarPistolaApagadaEvent()
     {
         PistolaApagada?.Invoke();
+    }
+    #endregion
+
+    #region CONSULTA CARM
+    public delegate void CalidadDelAireServiceReadyDelegate();
+    public static event CalidadDelAireServiceReadyDelegate CalidadDelAireServiceReady;
+    public static void LanzarCalidadDelAireServiceReadyEvent()
+    {
+        CalidadDelAireServiceReady?.Invoke();
     }
     #endregion
 }

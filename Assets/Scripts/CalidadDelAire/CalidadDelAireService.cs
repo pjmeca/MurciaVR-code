@@ -81,6 +81,8 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
             var json = www.downloadHandler.text;
             callback(json);
         }
+
+        Eventos.LanzarCalidadDelAireServiceReadyEvent();
     }
 
     private void OnConsultaReceived(string json)
