@@ -6698,6 +6698,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jugador: {fileID: 1797076835}
+--- !u!1 &211879264 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5176037608302300294, guid: bd4f102f1c8940f4a8c8c94b77da6d77,
+    type: 3}
+  m_PrefabInstance: {fileID: 1793216108}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &223503066
 GameObject:
   m_ObjectHideFlags: 0
@@ -37708,6 +37714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0761f4cab4921b649b489ed7a8f33556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OjoCentral: {fileID: 211879264}
   velocidadCaminar: 20
   velocidadRotar: 60
   IsActiveVolar: 1
@@ -39357,6 +39364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0761f4cab4921b649b489ed7a8f33556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OjoCentral: {fileID: 0}
   velocidadCaminar: 20
   velocidadRotar: 60
   IsActiveVolar: 1

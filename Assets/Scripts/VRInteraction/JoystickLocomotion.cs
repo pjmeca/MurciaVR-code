@@ -15,10 +15,12 @@ using Zenject;
 public class JoystickLocomotion : MonoBehaviour
 {
     private Rigidbody playerRB;
+    public GameObject OjoCentral;
 
     [Header("Movimiento")]
     public float velocidadCaminar = 20;
     public float velocidadRotar = 60;
+    private float rotacionSistema = 0f;
 
     [Header("Volar")]
     public bool IsActiveVolar = true;
@@ -85,10 +87,34 @@ public class JoystickLocomotion : MonoBehaviour
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.LTouch);
 
-        Vector3 aux = playerRB.position + velocidadCaminar * Time.deltaTime * (transform.right * joystickAxis.x + transform.forward * joystickAxis.y);
+        // Si no se está moviendo, se recalcula el vector de rotación del sistema
+        if (joystickAxis.x == 0 && joystickAxis.y == 0)
+            rotacionSistema = 360 - OjoCentral.transform.rotation.eulerAngles.y + playerRB.transform.rotation.eulerAngles.y;
+        else
+        {
+            var vector = ConvertToNonRotated(joystickAxis, rotacionSistema);
+            Vector3 aux = playerRB.position + velocidadCaminar * Time.deltaTime * (transform.right * vector.x + transform.forward * vector.y);
 
-        nuevaPosX = aux.x;
-        nuevaPosZ = aux.z;
+            nuevaPosX = aux.x;
+            nuevaPosZ = aux.z;
+        }
+    }
+
+    /// <summary>
+    /// Método auxiliar para convertir un sistema 2D rotado en un sistema 2D no rotado.
+    /// </summary>
+    public static Vector2 ConvertToNonRotated(Vector2 rotatedPoint, float rotationAngle)
+    {
+        float radianAngle = rotationAngle * Mathf.Deg2Rad;
+
+        float cosAngle = Mathf.Cos(radianAngle);
+        float sinAngle = Mathf.Sin(radianAngle);
+
+        // Aplicar la transformación inversa para obtener las coordenadas no rotadas
+        float nonRotatedX = rotatedPoint.x * cosAngle - rotatedPoint.y * sinAngle;
+        float nonRotatedY = rotatedPoint.x * sinAngle + rotatedPoint.y * cosAngle;
+
+        return new Vector2(nonRotatedX, nonRotatedY);
     }
 
     private void Rotar()
