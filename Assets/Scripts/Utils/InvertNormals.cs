@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using UnityEngine;
 
-/*
- * Este script invierte las normales de un Mesh.
- * Fuente: https://youtu.be/HEHn4EUUyBk
- */
+/// <summary>
+/// Invierte las normales de un Mesh.<br />
+/// https://youtu.be/HEHn4EUUyBk
+/// </summary>
 public class InvertNormals : MonoBehaviour
 {
     void Start()
@@ -22,9 +19,7 @@ public class InvertNormals : MonoBehaviour
             for (int j = 0; j < tris.Length; j += 3)
             {
                 //swap order of tri vertices
-                int temp = tris[j];
-                tris[j] = tris[j + 1];
-                tris[j + 1] = temp;
+                (tris[j + 1], tris[j]) = (tris[j], tris[j + 1]);
             }
             mesh.SetTriangles(tris, i);
         }

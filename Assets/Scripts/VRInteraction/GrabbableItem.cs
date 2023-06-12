@@ -1,10 +1,13 @@
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
+
+/// <summary>
+/// Gestiona la interacción de agarre de un objeto a través de su propiedad IsAgarrado.<br />
+/// Toma como base el componente Grabbable, pero controla las colisiones con el jugador,
+/// de lo contrario, un objeto agarrado podría colisionar con el cuerpo del jugador, 
+/// provocando comportamientos indeseados como su desplazamiento debido a la fuerza de repulsión.
+/// </summary>
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Grabbable))]
@@ -14,7 +17,7 @@ public class GrabbableItem : MonoBehaviour
     private GameObject Jugador;
     private Grabbable grabbable;
 
-    public bool IsAgarrado;
+    public bool IsAgarrado { get; private set; }
 
     void Start()
     {
@@ -31,7 +34,8 @@ public class GrabbableItem : MonoBehaviour
 
     void Update()
     {
-        if(!IsAgarrado && grabbable.GrabPoints.Count > 0) // está siendo agarrado
+        // Comprueba si está siendo agarrado
+        if (!IsAgarrado && grabbable.GrabPoints.Count > 0)
         {
             // Ignora todas sus colisiones con todas las colisiones del jugador
             foreach (Collider c in Jugador.GetComponentsInChildren<Collider>())

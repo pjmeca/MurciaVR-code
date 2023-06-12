@@ -58,13 +58,18 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
         PM25 = DEFAULT_PM25;
 
         // Obtener los datos de la CARM
-        CoroutineRunner.instance.StartCoroutine(ConsultaCARM(OnConsultaReceived));        
+        CoroutineRunner.instance.StartCoroutine(ConsultaCARM(OnConsultaReceived));
     }
 
+    /// <summary>
+    /// Realiza la consulta a la web de la CARM para obtener los niveles de contaminación de la última hora.
+    /// </summary>
+    /// <param name="callback">Método que debe llamarse una vez se haya completado la consulta.</param>
+    /// <returns></returns>
     private IEnumerator ConsultaCARM(System.Action<string> callback)
     {
         DateTime fechaHoraActual = DateTime.Now;
-        DateTime fechaHoraFormateada = new DateTime(fechaHoraActual.Year, fechaHoraActual.Month, fechaHoraActual.Day, fechaHoraActual.Hour, 0, 0);
+        DateTime fechaHoraFormateada = new(fechaHoraActual.Year, fechaHoraActual.Month, fechaHoraActual.Day, fechaHoraActual.Hour, 0, 0);
         string fechaHoraString = fechaHoraFormateada.ToString("dd/MM/yyyy HH:mm");
 
         UnityWebRequest www = UnityWebRequest.Get(URL_CARM);
@@ -73,11 +78,10 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
 
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
-            Debug.Log(www.error);            
+            Debug.Log(www.error);
         }
         else
         {
-            // Show results as text
             var json = www.downloadHandler.text;
             callback(json);
         }
@@ -85,6 +89,10 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
         Eventos.LanzarCalidadDelAireServiceReadyEvent();
     }
 
+    /// <summary>
+    /// Realiza el tratamiento sobre la respuesta recibida de la CARM.
+    /// </summary>
+    /// <param name="json">Archivo JSON recibido desde la CARM.</param>
     private void OnConsultaReceived(string json)
     {
         // La CARM devuelve un JSON no estándar, hay que corregir el formato
@@ -93,16 +101,21 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
 
         Estacion SanBasilio = estaciones.Where(e => "San Basilio".Equals(e.nombre)).FirstOrDefault();
 
-        if(SanBasilio!= null)
+        if (SanBasilio != null)
         {
-            SO2  =  SanBasilio.SO2  == null ? 0 : float.Parse(SanBasilio.SO2, CultureInfo.GetCultureInfo("es-ES"));
-            NO2  =  SanBasilio.NO2  == null ? 0 : float.Parse(SanBasilio.NO2, CultureInfo.GetCultureInfo("es-ES"));
-            PM10 =  SanBasilio.PM10 == null ? 0 : float.Parse(SanBasilio.PM10, CultureInfo.GetCultureInfo("es-ES"));
-            O3   =  SanBasilio.O3   == null ? 0 : float.Parse(SanBasilio.O3, CultureInfo.GetCultureInfo("es-ES"));
-            PM25 =  SanBasilio.PM25 == null ? 0 : float.Parse(SanBasilio.PM25, CultureInfo.GetCultureInfo("es-ES"));
+            SO2 = SanBasilio.SO2 == null ? 0 : float.Parse(SanBasilio.SO2, CultureInfo.GetCultureInfo("es-ES"));
+            NO2 = SanBasilio.NO2 == null ? 0 : float.Parse(SanBasilio.NO2, CultureInfo.GetCultureInfo("es-ES"));
+            PM10 = SanBasilio.PM10 == null ? 0 : float.Parse(SanBasilio.PM10, CultureInfo.GetCultureInfo("es-ES"));
+            O3 = SanBasilio.O3 == null ? 0 : float.Parse(SanBasilio.O3, CultureInfo.GetCultureInfo("es-ES"));
+            PM25 = SanBasilio.PM25 == null ? 0 : float.Parse(SanBasilio.PM25, CultureInfo.GetCultureInfo("es-ES"));
         }
     }
 
+    /// <summary>
+    /// Convierte el JSON recibido de la CARM a un formato estándar.
+    /// </summary>
+    /// <param name="json"></param>
+    /// <returns></returns>
     private static string ConvertirJson(string json)
     {
         json.Trim();
@@ -127,7 +140,8 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
         return new CalidadDelAire(SO2, NO2, PM10, O3, PM25);
     }
 
-    
+
+    /* Clases para deserializar el JSON */
     public class EstacionesContainer
     {
         public List<Estacion> estaciones;

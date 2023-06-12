@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Gestiona el comportamiento de la PistolaAspiradora, más concretamente, 
+/// gestiona los sonidos y el sistema de partículas.
+/// </summary>
 public class PistolaAspiradora : MonoBehaviour
 {
     public enum Estado

@@ -6,6 +6,12 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using Zenject;
 
+/// <summary>
+/// Gestiona el movimiento del jugador a través de los joysticks:<br />
+/// - Movimiento de caminar (JoyStick Izquierdo)<br />
+/// - Vuelo (coordenada Y del JoyStick Derecho)<br />
+/// - Rotación o giro de cámara (coordenada X del JoyStick Derecho)<br />
+/// </summary>
 public class JoystickLocomotion : MonoBehaviour
 {
     private Rigidbody playerRB;
@@ -44,7 +50,6 @@ public class JoystickLocomotion : MonoBehaviour
     public float alturaMaxima = 20;
     private float ultimaAltitud = 0;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerRB = GetComponent<Rigidbody>();
@@ -54,16 +59,15 @@ public class JoystickLocomotion : MonoBehaviour
         posY = ultimaPosY = nuevaPosY = playerRB.transform.position.y;
         posZ = ultimaPosZ = nuevaPosZ = playerRB.transform.position.z;
 
-        actualizarPosicion(posX, posZ);
+        ActualizarPosicion(posX, posZ);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        caminar();        // 1
-        rotar();          // 2
-        volar();          // 3        
-        ajustarAltitud(); // 4
+        Caminar();        // 1
+        Rotar();          // 2
+        Volar();          // 3        
+        AjustarAltitud(); // 4
 
         playerRB.position = new Vector3(nuevaPosX, nuevaPosY, nuevaPosZ);
 
@@ -73,7 +77,7 @@ public class JoystickLocomotion : MonoBehaviour
     }
 
     // https://www.youtube.com/watch?v=rwGv1rmm1kQ
-    void caminar()
+    private void Caminar()
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.LTouch);
 
@@ -83,7 +87,7 @@ public class JoystickLocomotion : MonoBehaviour
         nuevaPosZ = aux.z;
     }
 
-    void rotar()
+    private void Rotar()
     {
         var joystickAxis = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.RTouch);
 
@@ -91,7 +95,7 @@ public class JoystickLocomotion : MonoBehaviour
             transform.Rotate(velocidadRotar * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
     }
 
-    void volar()
+    private void Volar()
     {
         // Desactivamos la gravedad
         GetComponent<Rigidbody>().useGravity = !IsActiveVolar && gravityActiveState;
@@ -107,13 +111,13 @@ public class JoystickLocomotion : MonoBehaviour
         }
     }
 
-    void ajustarAltitud()
+    private void AjustarAltitud()
     {
         // Si ha cambiado respecto a la última posición
         if (IsActiveAjusteAltitud && (Mathf.Abs(posX) < Mathf.Abs(ultimaPosX) - precision || Mathf.Abs(posX) > Mathf.Abs(ultimaPosX) + precision
             || Mathf.Abs(posZ) < Mathf.Abs(ultimaPosZ) - precision || Mathf.Abs(posZ) > Mathf.Abs(ultimaPosZ) + precision))
         {
-            actualizarPosicion(posX, posZ);
+            ActualizarPosicion(posX, posZ);
         }
         // Si no
         else
@@ -126,7 +130,7 @@ public class JoystickLocomotion : MonoBehaviour
         }
     }
 
-    void actualizarPosicion(float posX, float posZ)
+    private void ActualizarPosicion(float posX, float posZ)
     {
         if (!mapa)
             return;
@@ -144,7 +148,7 @@ public class JoystickLocomotion : MonoBehaviour
         // Nos quedamos esperando en OnTextReceived para seguir 
     }
 
-    IEnumerator GetText(string url, System.Action<string> callback)
+    private IEnumerator GetText(string url, System.Action<string> callback)
     {
         using UnityWebRequest www = UnityWebRequest.Get(url);
         //Debug.Log(url);
@@ -162,7 +166,7 @@ public class JoystickLocomotion : MonoBehaviour
         }
     }
 
-    void OnTextReceived(string json)
+    private void OnTextReceived(string json)
     {
         //Debug.Log(json);
         Resultado resultado = JsonUtility.FromJson<Resultado>(json);

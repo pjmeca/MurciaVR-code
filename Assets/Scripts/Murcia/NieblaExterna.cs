@@ -1,10 +1,12 @@
 using UnityEngine;
 
+/// <summary>
+/// Actualiza la posición de la niebla externa siguiendo al jugador.
+/// </summary>
 public class NieblaExterna : MonoBehaviour
 {
     public GameObject jugador;
 
-    // Update is called once per frame
     void Update()
     {
         var posX = jugador.transform.position.x;

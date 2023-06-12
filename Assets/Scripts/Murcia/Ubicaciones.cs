@@ -4,15 +4,17 @@ using System;
 using UnityEngine;
 using Zenject;
 
+/// <summary>
+/// Actualiza la ubicación del jugador en base a un enumerado de ubicaciones preestablecidas.
+/// </summary>
 public class Ubicaciones : MonoBehaviour
 {
     [Inject]
-    private MapRenderer mapRenderer;
+    private readonly MapRenderer mapRenderer;
 
-    [SerializeField]
-    public Ubicacion ubicacion = Ubicacion.Catedral;
-    private Ubicacion ultimaUbicacion;
-    public enum Ubicacion
+    public UbicacionesEnum Ubicacion = UbicacionesEnum.Catedral;
+    private UbicacionesEnum ultimaUbicacion;
+    public enum UbicacionesEnum
     {
         Catedral,
         FIUM,
@@ -22,7 +24,7 @@ public class Ubicaciones : MonoBehaviour
         EstadioLaCondomina,
         ElCorteIngles
     }
-    public LatLon[] latlons =
+    private readonly LatLon[] _latlons =
     {
         new LatLon(37.983832, -1.129289), // Catedral
         new LatLon(38.023740, -1.173636), // FIUM
@@ -30,29 +32,27 @@ public class Ubicaciones : MonoBehaviour
         new LatLon(37.984810, -1.133141), // Plaza de las Flores
         new LatLon(37.985201, -1.122540), // Plaza de Toros
         new LatLon(37.986060, -1.121298), // Estadio La Condomina
-        new LatLon(37.989306, -1.132552) // El Corte Inglés
+        new LatLon(37.989306, -1.132552)  // El Corte Inglés
         
     };
 
-    // Start is called before the first frame update
     void Start()
     {
-        actualizarUbicacion();
+        ActualizarUbicacion();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(ultimaUbicacion != ubicacion)
+        if (ultimaUbicacion != Ubicacion)
         {
-            actualizarUbicacion();
+            ActualizarUbicacion();
         }
     }
 
-    private void actualizarUbicacion()
+    private void ActualizarUbicacion()
     {
-        ultimaUbicacion = ubicacion;
-        int index = Array.IndexOf(Enum.GetValues(ubicacion.GetType()), ubicacion);
-        mapRenderer.SetMapScene(new MapSceneOfLocationAndZoomLevel(new LatLon(latlons[index].LatitudeInDegrees, latlons[index].LongitudeInDegrees), mapRenderer.ZoomLevel), MapSceneAnimationKind.None);
+        ultimaUbicacion = Ubicacion;
+        int index = Array.IndexOf(Enum.GetValues(Ubicacion.GetType()), Ubicacion);
+        mapRenderer.SetMapScene(new MapSceneOfLocationAndZoomLevel(new LatLon(_latlons[index].LatitudeInDegrees, _latlons[index].LongitudeInDegrees), mapRenderer.ZoomLevel), MapSceneAnimationKind.None);
     }
 }

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Gestiona la niebla que orbita alrededor de la cabeza del jugador cuando entra en una nube de contaminación.
+/// </summary>
 public class FogActivator : MonoBehaviour
 {
     private GameObject esfera;
@@ -9,7 +12,6 @@ public class FogActivator : MonoBehaviour
 
     private List<GameObject> CollidedFogs;
 
-    // Start is called before the first frame update
     void Start()
     {
         CollidedFogs = new();

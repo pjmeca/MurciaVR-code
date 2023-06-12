@@ -1,7 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Gestiona el spawn de la PistolaAspiradora.
+/// </summary>
 public class PistolaAspiradoraSpawn : MonoBehaviour
 {
     public bool Reset = false;
@@ -13,7 +15,6 @@ public class PistolaAspiradoraSpawn : MonoBehaviour
     private ParticleSystem ParticleSystem;
     private Light luz;
 
-    // Start is called before the first frame update
     void Start()
     {
         PistolaAspiradora = GameObject.Find("PistolaAspiradora");
@@ -21,7 +22,6 @@ public class PistolaAspiradoraSpawn : MonoBehaviour
         luz = gameObject.GetComponent<Light>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         CheckPulsacion();
@@ -53,7 +53,6 @@ public class PistolaAspiradoraSpawn : MonoBehaviour
         {
             Reset = true;
         }
-
     }
 
     private IEnumerator TraerPistola()

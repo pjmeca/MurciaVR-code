@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using OVR;
-using Oculus.Interaction.Input;
 
-/*
- * Script para el movimiento VR del jugador sin tener en cuenta la API de la ciudad.
- */
+/// <summary>
+/// Script para el movimiento VR del jugador sin tener en cuenta la API de la ciudad.
+/// </summary>
 public class JoystickLocomotionOld : MonoBehaviour
 {
     public GameObject player;
@@ -18,13 +14,11 @@ public class JoystickLocomotionOld : MonoBehaviour
     };
     public tipoMovimiento dropDown = tipoMovimiento.Caminar;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerRB = player.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -53,9 +47,9 @@ public class JoystickLocomotionOld : MonoBehaviour
         player.transform.Rotate(speed * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
     }
 
-    /*
-     * Comprueba si se está pulsando el gatillo con o sin mando.
-     */
+    /// <summary>
+    /// Comprueba si se está pulsando el gatillo con o sin mando.
+    /// </summary>
     public bool IsGatilloTriggered()
     {
         var hand = gameObject.GetComponentInChildren<OVRHand>();

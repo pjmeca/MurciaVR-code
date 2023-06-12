@@ -1,27 +1,24 @@
-//
-// Actualiza la posición y las coordenadas del mapa (la región renderizada por Bing Maps SDK)
-// para que se mueva con el jugador.
-//
-
 using UnityEngine;
 using Microsoft.Maps.Unity;
 using Microsoft.Geospatial;
-using Unity.VisualScripting;
 using Zenject;
 
+/// <summary>
+/// Actualiza la posición y las coordenadas del mapa (la región renderizada por Bing Maps SDK)
+/// para que se mueva con el jugador.
+/// </summary>
 public class MovimientoCiudad : MonoBehaviour
 {
     public GameObject jugador;
 
     [Inject]
-    private MapRenderer mapaCentral;
+    private readonly MapRenderer mapaCentral;
 
     // Perímetro máximo dentro del cual no se actualizará la posición del mapa
     [Range(0, 500)]
     public float perimetro = 100;
     private float difX = 0, difZ = 0;
 
-    // Update is called once per frame
     void Update()
     {        
         // Obtener la posición del jugador
@@ -48,7 +45,6 @@ public class MovimientoCiudad : MonoBehaviour
         }
     }
 
-    // Actualiza la posición del mapa
     public void MoverMapa(float posX, float posZ)
     {
         // Mover el centro del mapa a esa posición

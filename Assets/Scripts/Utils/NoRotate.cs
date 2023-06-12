@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Deshabilita la rotación de un objeto.
+/// </summary>
 public class NoRotate : MonoBehaviour
 {
     private Quaternion initialRotation;

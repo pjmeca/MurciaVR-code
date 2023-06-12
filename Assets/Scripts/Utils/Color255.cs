@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Representa un color usando el formato RGBA 255.
+/// Representa a un color usando el formato RGBA 255.
 /// </summary>
 public class Color255
 {
@@ -10,7 +10,7 @@ public class Color255
     public float B { get; private set; }
     public float A { get; private set; }
 
-    private Color255(float r, float g, float b, float a = 255)
+    public Color255(float r, float g, float b, float a = 255)
     {
         R = r;
         G = g;

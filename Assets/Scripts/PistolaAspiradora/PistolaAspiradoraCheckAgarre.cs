@@ -1,6 +1,11 @@
 using Oculus.Interaction.HandGrab;
 using UnityEngine;
 
+/// <summary>
+/// Esta clase se encarga de la gestión de los eventos de agarre de la pistola aspiradora.<br />
+/// Cuando se agarra la PistolaAspiradora se lanzará un evento PistolaEncendida, 
+/// cuando se suelte se lanzará un evento PistolaApagada.
+/// </summary>
 public class PistolaAspiradoraCheckAgarre : MonoBehaviour
 {
     void Update()

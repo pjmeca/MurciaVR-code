@@ -88,7 +88,7 @@ public class CalidadDelAire
 
     #endregion
 
-    #region CONSTRUCTOR
+    #region CONSTRUCTORES
     public CalidadDelAire(Indices indice=Indices.Buena)
     {
         Indice = indice;
@@ -243,7 +243,7 @@ public class CalidadDelAire
                 banda = i;
             }
 
-            // Si es mayor que la maxDiferencia, actualizar maxDiferencia = diferencia, bandaElegida = j, nivelBandaElegida = i+1
+            // Si es mayor que la maxDiferencia, actualizar
             if(diferencia > maxDiferencia)
             {
                 maxDiferencia = diferencia;
@@ -251,7 +251,6 @@ public class CalidadDelAire
                 nivelBanda = banda;
             }
         }
-        // Calcular valor relativo con bandaElegida, nivelBandaElegida (cuidado caso último nivel) y maxDiferencia
 
         // Se sale de la escala
         if ((nivelBanda+1) == BANDAS_CONCENTRACION.GetLength(0))
@@ -271,13 +270,13 @@ public class CalidadDelAire
         if (Concentraciones == null)
             return;
 
-        // Restar de manera proporcional a la escala
-        var resta = 100 * SPEED_LIMPIEZA * Time.deltaTime / 1250;
-        Concentraciones[0] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 1250;
-        Concentraciones[1] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 1000;
-        Concentraciones[2] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 1200;
-        Concentraciones[3] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 800;
-        Concentraciones[4] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / 800;
+        // Restar de manera proporcional a la escala        
+        var resta = 100 * SPEED_LIMPIEZA      * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 0];
+        Concentraciones[0] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 0];
+        Concentraciones[1] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 1];
+        Concentraciones[2] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 2];
+        Concentraciones[3] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 3];
+        Concentraciones[4] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 4];
 
         // Asegurarse de que ningún valor sea negativo
         Concentraciones[0] = Concentraciones[0] < 0 ? 0 : Concentraciones[0];

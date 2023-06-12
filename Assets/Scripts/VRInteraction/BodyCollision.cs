@@ -1,11 +1,12 @@
-/*
-Script basado en el tutorial de BeginnerVR: https://www.youtube.com/@beginnervr8751
-*/
-
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Ignora todas las colisiones con el cuerpo del jugador.<br />
+/// Como el jugador está compuesto por varios GameObject con colliders,
+/// es importante ignorar sus colisiones, de lo contrario, el jugador podría
+/// verse sometido a fuerzas inesperadas que produzcan movimientos involuntarios.
+/// </summary>
 public class BodyCollision : MonoBehaviour
 {
     public Transform cabeza;

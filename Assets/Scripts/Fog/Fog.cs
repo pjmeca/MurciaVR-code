@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.Maps.Unity;
 using UnityEngine;
 using Zenject;
@@ -66,7 +63,7 @@ public class Fog : MonoBehaviour
     #region MÉTODOS UNITY
     public void Start()
     {
-        _particleSystem = GetComponent<ParticleSystem>();    
+        _particleSystem = GetComponent<ParticleSystem>();
         _sphereCollider = GetComponent<SphereCollider>();
 
         INITIAL_RADIUS = _sphereCollider.radius;
@@ -85,7 +82,7 @@ public class Fog : MonoBehaviour
     }
 
     public void Update()
-    {   
+    {
         // Comprobar si se ha cambiado el índice (desde el Inspector)
         Calidad.Indice = Indice;
         Indice = Calidad.Indice;
@@ -99,7 +96,7 @@ public class Fog : MonoBehaviour
         UpdateSize();
 
         // Actualizar el color
-        UpdateGradient();       
+        UpdateGradient();
     }
     #endregion
 
@@ -110,6 +107,10 @@ public class Fog : MonoBehaviour
         colorOverLifetimeModule.color = Gradiente;
     }
 
+    /// <summary>
+    /// Actualiza el tamaño del sistema de partículas y del collider en base
+    /// al porcentaje de contaminación restante para el siguiente índice.
+    /// </summary>
     private void UpdateSize()
     {
         float porcentajeContaminacion = Calidad.ContaminacionEnIndice();
@@ -125,9 +126,9 @@ public class Fog : MonoBehaviour
 
         var shape = _particleSystem.shape;
         shape.scale = new Vector3(
-            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice-1].x, _scales[(int)Calidad.Indice].x),
-            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice-1].y, _scales[(int)Calidad.Indice].y),
-            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice-1].z, _scales[(int)Calidad.Indice].z)
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].x, _scales[(int)Calidad.Indice].x),
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].y, _scales[(int)Calidad.Indice].y),
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].z, _scales[(int)Calidad.Indice].z)
         );
         var emission = _particleSystem.emission;
         var rateOverTime = emission.rateOverTime;
@@ -144,7 +145,7 @@ public class Fog : MonoBehaviour
     /// <param name="c"></param>
     /// <param name="maxAlpha">Valor máximo del canal alfa</param>
     /// <returns></returns>
-    private Gradient CrearGradiente(Color c, float maxAlpha=1.0f)
+    private Gradient CrearGradiente(Color c, float maxAlpha = 1.0f)
     {
         var gradient = new Gradient();
 
@@ -165,7 +166,7 @@ public class Fog : MonoBehaviour
         gradient.SetKeys(colorKey, alphaKey);
 
         return gradient;
-    }       
+    }
     #endregion
 
     #region FUNCIONALIDAD
