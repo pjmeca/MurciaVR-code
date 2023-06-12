@@ -5,6 +5,21 @@
 /// </summary>
 public class Eventos
 {
+    #region LOADING
+    public delegate void LoadingDelegate();
+    public delegate void LoadedDelegate();
+    public static event LoadingDelegate Loading;
+    public static event LoadedDelegate Loaded;
+    public static void LanzarLoadingEvent()
+    {
+        Loading?.Invoke();
+    }
+    public static void LanzarLoadedEvent()
+    {
+        Loaded?.Invoke();
+    }
+    #endregion
+
     #region PISTOLA ASPIRADORA
     public delegate void PistolaEncendidaDelegate();
     public static event PistolaEncendidaDelegate PistolaEncendida;

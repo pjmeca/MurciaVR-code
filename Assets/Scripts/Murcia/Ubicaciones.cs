@@ -71,5 +71,7 @@ public class Ubicaciones : MonoBehaviour
         var point = mapRenderer.TransformLatLonAltToWorldPoint(new LatLonAlt(_latlons[index].LatitudeInDegrees, _latlons[index].LongitudeInDegrees, 0));
 
         Jugador.transform.position = new Vector3(point.x, _alturas[index], point.z);
+
+        Eventos.LanzarLoadingEvent();
     }
 }
