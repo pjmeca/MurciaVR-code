@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Maps.Unity;
+using UnityEngine;
 using Zenject;
 
 /// <summary>
@@ -8,6 +9,7 @@ using Zenject;
 public class Installer : MonoInstaller
 {
     public MapRenderer MapRenderer;
+    public GameObject Jugador;
 
     public override void InstallBindings()
     {
@@ -19,6 +21,12 @@ public class Installer : MonoInstaller
             throw new NullReferenceException("No se ha establecido un valor para MapRenderer.");
 
         Container.BindInstance(MapRenderer)
+            .AsSingle();
+
+        if (Jugador == null) 
+            throw new NullReferenceException("No se ha establecido un valor para Jugador.");
+
+        Container.BindInstance(Jugador)
             .AsSingle();
     }
 }

@@ -64,6 +64,10 @@ public class JoystickLocomotion : MonoBehaviour
 
     void Update()
     {
+        nuevaPosX = playerRB.position.x;
+        nuevaPosY = playerRB.position.y;
+        nuevaPosZ = playerRB.position.z;
+
         Caminar();        // 1
         Rotar();          // 2
         Volar();          // 3        

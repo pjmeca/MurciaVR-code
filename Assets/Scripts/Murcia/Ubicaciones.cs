@@ -11,6 +11,8 @@ public class Ubicaciones : MonoBehaviour
 {
     [Inject]
     private readonly MapRenderer mapRenderer;
+    [Inject]
+    private readonly GameObject Jugador;
 
     public UbicacionesEnum Ubicacion = UbicacionesEnum.Catedral;
     private UbicacionesEnum ultimaUbicacion;
@@ -35,6 +37,17 @@ public class Ubicaciones : MonoBehaviour
         new LatLon(37.989306, -1.132552)  // El Corte Inglés
         
     };
+    // Almacena las alturas iniciales al teletransportar
+    private readonly float[] _alturas =
+    {
+        7.12055f,   // Catedral
+        20.83703f,  // FIUM
+        6.170428f,  // Romea
+        6.170428f,  // Plaza de las Flores
+        7.04277f,   // Plaza de Toros
+        7.04277f,   // Estadio La Condomina
+        14.9816f    // El Corte Inglés
+    };
 
     void Start()
     {
@@ -53,6 +66,10 @@ public class Ubicaciones : MonoBehaviour
     {
         ultimaUbicacion = Ubicacion;
         int index = Array.IndexOf(Enum.GetValues(Ubicacion.GetType()), Ubicacion);
-        mapRenderer.SetMapScene(new MapSceneOfLocationAndZoomLevel(new LatLon(_latlons[index].LatitudeInDegrees, _latlons[index].LongitudeInDegrees), mapRenderer.ZoomLevel), MapSceneAnimationKind.None);
+
+        // Convertimos las coordenadas a un punto de Unity
+        var point = mapRenderer.TransformLatLonAltToWorldPoint(new LatLonAlt(_latlons[index].LatitudeInDegrees, _latlons[index].LongitudeInDegrees, 0));
+
+        Jugador.transform.position = new Vector3(point.x, _alturas[index], point.z);
     }
 }
