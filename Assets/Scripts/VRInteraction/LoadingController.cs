@@ -10,20 +10,28 @@ public class LoadingController : MonoBehaviour
 {
 
     public bool IsLoaded { get; private set; } = false;
+    private bool ManualLoad = false;
 
     private MapRenderer[] mapas;
 
     void Awake()
-    {
-        // Obtener todos los mapas en la escena
-        mapas = (MapRenderer[])GameObject.FindObjectsOfType(typeof(MapRenderer));
-
+    {       
         Eventos.Loading += OnLoadingEvent;
+        Eventos.Loaded += OnLoadedEvent;
+    }
+
+    private void OnDestroy()
+    {
+        Eventos.Loading -= OnLoadingEvent;
+        Eventos.Loaded -= OnLoadedEvent;
     }
 
     void Update()
     {
-        if (IsLoaded)
+        // Obtener todos los mapas en la escena
+        mapas = (MapRenderer[])GameObject.FindObjectsOfType(typeof(MapRenderer));
+
+        if (IsLoaded || ManualLoad)
             return;        
 
         // Comprobar si se han cargado
@@ -48,8 +56,19 @@ public class LoadingController : MonoBehaviour
 
     private void OnLoadingEvent()
     {
+        if (IsLoaded)
+            ManualLoad = true;
+
         gameObject.SetActive(true);
-        IsLoaded = false;
+        IsLoaded = false;        
         AudioListener.pause = true;
+    }
+
+    private void OnLoadedEvent()
+    {
+        if (ManualLoad)
+        {
+            ManualLoad = false;
+        }
     }
 }

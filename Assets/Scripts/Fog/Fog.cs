@@ -81,6 +81,11 @@ public class Fog : MonoBehaviour
         Indice = Calidad.Indice;
     }
 
+    private void OnDestroy()
+    {
+        Eventos.CalidadDelAireServiceReady -= DeferredStart;
+    }
+
     public void Update()
     {
         // Comprobar si se ha cambiado el índice (desde el Inspector)
