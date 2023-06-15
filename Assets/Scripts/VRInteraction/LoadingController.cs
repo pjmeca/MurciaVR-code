@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Maps.Unity;
 using UnityEngine;
 
@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class LoadingController : MonoBehaviour
 {
+    private LayerMask MascaraOriginal;
+    private LayerMask MascaraLoading;
+    private bool ActivarMascara = true;
 
     public bool IsLoaded { get; private set; } = false;
     private bool ManualLoad = false;
@@ -18,6 +21,10 @@ public class LoadingController : MonoBehaviour
     {       
         Eventos.Loading += OnLoadingEvent;
         Eventos.Loaded += OnLoadedEvent;
+
+        MascaraLoading = LayerMask.NameToLayer("Loading");
+        List<Camera> Camaras = ObtenerCamaras();
+        MascaraOriginal = Camaras.First().cullingMask;
     }
 
     private void OnDestroy()
@@ -26,13 +33,38 @@ public class LoadingController : MonoBehaviour
         Eventos.Loaded -= OnLoadedEvent;
     }
 
+    /// <summary>
+    /// Obtiene las cámaras del frame actual.
+    /// Es importante consultarlas en el frame actual porque puede haber cambiado de escena.
+    /// </summary>
+    private List<Camera> ObtenerCamaras()
+    {
+        List<Camera> Camaras = new();
+        Camaras.Add(GameObject.Find("LeftEyeAnchor").GetComponent<Camera>());
+        Camaras.Add(GameObject.Find("CenterEyeAnchor").GetComponent<Camera>());
+        Camaras.Add(GameObject.Find("RightEyeAnchor").GetComponent<Camera>());
+
+        return Camaras;
+    }
+
     void Update()
     {
         // Obtener todos los mapas en la escena
         mapas = (MapRenderer[])GameObject.FindObjectsOfType(typeof(MapRenderer));
 
         if (IsLoaded || ManualLoad)
-            return;        
+            return; 
+        
+        // Si estamos en la primera iteración -> obtener cámaras y activar la capa
+        if(ActivarMascara)
+        {
+            List<Camera> Camaras = ObtenerCamaras();
+
+            // Configuramos solo esa capa
+            Camaras.ForEach(c => c.cullingMask = 1 << MascaraLoading);
+
+            ActivarMascara = false;
+        }
 
         // Comprobar si se han cargado
         int loadedMaps = 0;
@@ -48,9 +80,13 @@ public class LoadingController : MonoBehaviour
 
         if (IsLoaded)
         {
+            // Reactivamos las máscaras originales
+            List<Camera> Camaras = ObtenerCamaras();
+            Camaras.ForEach(c => c.cullingMask = MascaraOriginal);
+            ActivarMascara = true;
+
             AudioListener.pause = false;
             Eventos.LanzarLoadedEvent();
-            gameObject.SetActive(false);
         }        
     }
 
@@ -59,7 +95,6 @@ public class LoadingController : MonoBehaviour
         if (IsLoaded)
             ManualLoad = true;
 
-        gameObject.SetActive(true);
         IsLoaded = false;        
         AudioListener.pause = true;
     }
