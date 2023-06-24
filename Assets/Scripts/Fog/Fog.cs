@@ -69,7 +69,7 @@ public class Fog : MonoBehaviour
         INITIAL_RADIUS = _sphereCollider.radius;
 
         // Para obtener la calidad del aire hay que esperar a que el servicio se haya inicializado
-        Eventos.CalidadDelAireServiceReady += DeferredStart;
+        Eventos.SuscribirseCalidadDelAireServiceReadyEvent(DeferredStart);
         Calidad = new();
     }
 

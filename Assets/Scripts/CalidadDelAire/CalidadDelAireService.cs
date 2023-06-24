@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using KdTree.Math;
+using KdTree;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -32,6 +34,9 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
 
     string URL_CARM = "https://sinqlair.carm.es/calidadaire/obtener_datos.aspx?tipo=tablaEstaciones";
 
+    // FACTOR ISOCONCENTRACION RESPECTO A SAN BASILIO
+    public readonly KdTree<float, float> _factoresIsoconcentracion;
+
     #region CONSTANTES CONTAMINACION
     public float DEFAULT_SO2 = 1000f;
     public float DEFAULT_NO2 = 400f;
@@ -56,6 +61,71 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
         PM10 = DEFAULT_PM10;
         O3 = DEFAULT_O3;
         PM25 = DEFAULT_PM25;
+
+        // Crear el árbol 2D con los factores de isoconcentración
+        _factoresIsoconcentracion = new(2, new FloatMath())
+        {
+            { new[] { 37.993114f, -1.139457f }, 0.95f },
+            { new[] { 37.991809f, -1.131184f }, 0.82f },
+            { new[] { 37.992278f, -1.134494f }, 0.73f },
+            { new[] { 37.992151f, -1.13517f }, 0.79f },
+            { new[] { 37.994205f, -1.136691f }, 0.6f },
+            { new[] { 37.994053f, -1.137356f }, 0.63f },
+            { new[] { 37.994193f, -1.137769f }, 0.66f },
+            { new[] { 37.993665f, -1.13675f }, 0.69f },
+            { new[] { 37.993864f, -1.12625f }, 0.57f },
+            { new[] { 37.993321f, -1.124494f }, 0.54f },
+            { new[] { 37.994226f, -1.124473f }, 0.5f },
+            { new[] { 37.993802f, -1.123065f }, 0.47f },
+            { new[] { 37.994136f, -1.121288f }, 0.44f },
+            { new[] { 37.993514f, -1.121057f }, 0.41f },
+            { new[] { 37.993708f, -1.120816f }, 0.38f },
+            { new[] { 37.991658f, -1.123814f }, 0.6f },
+            { new[] { 37.99144f, -1.122559f }, 0.63f },
+            { new[] { 37.990388f, -1.137544f }, 0.91f },
+            { new[] { 37.990388f, -1.136656f }, 0.95f },
+            { new[] { 37.98925f, -1.137246f }, 0.69f },
+            { new[] { 37.989461f, -1.137273f }, 0.73f },
+            { new[] { 37.98971f, -1.137343f }, 0.76f },
+            { new[] { 37.989985f, -1.13744f }, 0.79f },
+            { new[] { 37.990018f, -1.137034f }, 0.85f },
+            { new[] { 37.990215f, -1.137504f }, 0.88f },
+            { new[] { 37.99008f, -1.137461f }, 0.82f },
+            { new[] { 37.985612f, -1.138166f }, 0.5f },
+            { new[] { 37.984784f, -1.13818f }, 0.54f },
+            { new[] { 37.982651f, -1.138555f }, 0.57f },
+            { new[] { 37.98685f, -1.13344f }, 0.41f },
+            { new[] { 37.985422f, -1.133911f }, 0.44f },
+            { new[] { 37.985251f, -1.134087f }, 0.47f },
+            { new[] { 37.984045f, -1.134618f }, 0.57f },
+            { new[] { 37.981466f, -1.133888f }, 0.54f },
+            { new[] { 37.990628f, -1.122248f }, 0.73f },
+            { new[] { 37.989551f, -1.122443f }, 0.76f },
+            { new[] { 37.987916f, -1.122333f }, 0.79f },
+            { new[] { 37.981572f, -1.118773f }, 0.41f },
+            { new[] { 37.982759f, -1.11818f }, 0.44f },
+            { new[] { 37.984002f, -1.118609f }, 0.47f },
+            { new[] { 37.984383f, -1.118663f }, 0.5f },
+            { new[] { 37.986829f, -1.119829f }, 0.54f },
+            { new[] { 37.983264f, -1.121518f }, 0.38f },
+            { new[] { 37.979114f, -1.124617f }, 0.47f },
+            { new[] { 37.979258f, -1.124199f }, 0.5f },
+            { new[] { 37.979321f, -1.123942f }, 0.54f },
+            { new[] { 37.979444f, -1.123427f }, 0.57f },
+            { new[] { 37.981301f, -1.120744f }, 0.63f },
+            { new[] { 37.980045f, -1.12808f }, 0.73f },
+            { new[] { 37.980871f, -1.127074f }, 0.69f },
+            { new[] { 37.980972f, -1.126999f }, 0.66f },
+            { new[] { 37.986891f, -1.124745f }, 0.63f },
+            { new[] { 37.986992f, -1.124257f }, 0.66f },
+            { new[] { 37.987508f, -1.124289f }, 0.69f },
+            { new[] { 37.988544f, -1.125442f }, 0.6f },
+            { new[] { 37.989753f, -1.127704f }, 0.54f },
+            { new[] { 37.987248f, -1.128672f }, 0.44f },
+            { new[] { 37.988218f, -1.131376f }, 0.57f },
+            { new[] { 37.988269f, -1.129906f }, 0.5f },
+            { new[] { 37.987519f, -1.139015f }, 0.47f },
+        };        
 
         // Obtener los datos de la CARM
         CoroutineRunner.instance.StartCoroutine(ConsultaCARM(OnConsultaReceived));
@@ -130,12 +200,15 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
 
     public CalidadDelAire GetByLatLon(double lat, double lon)
     {
-        // TODO Realizar el cálculo a partir de los valores de referencia
-        float SO2 = this.SO2;
-        float NO2 = this.NO2;
-        float PM10 = this.PM10;
-        float O3 = this.O3;
-        float PM25 = this.PM25;
+        // Calcular a partir de los valores de referencia
+        var nodo = _factoresIsoconcentracion.GetNearestNeighbours(new[] { (float) lat, (float) lon }, 1);
+        var i = nodo[0].Value;
+
+        float SO2 = this.SO2 * i;
+        float NO2 = this.NO2 * i;
+        float PM10 = this.PM10 * i;
+        float O3 = this.O3 * i;
+        float PM25 = this.PM25 * i;
 
         return new CalidadDelAire(SO2, NO2, PM10, O3, PM25);
     }

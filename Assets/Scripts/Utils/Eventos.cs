@@ -39,8 +39,23 @@ public class Eventos
     #region CONSULTA CARM
     public delegate void CalidadDelAireServiceReadyDelegate();
     public static event CalidadDelAireServiceReadyDelegate CalidadDelAireServiceReady;
+    private static bool completada = false;
+    /// <summary>
+    /// Debe usarse este método en lugar de hacer += si se desea que se reciba el evento incluso si se suscribe después de haberse lanzado.
+    /// </summary>
+    public static void SuscribirseCalidadDelAireServiceReadyEvent(CalidadDelAireServiceReadyDelegate metodo)
+    {
+        CalidadDelAireServiceReady += metodo;
+
+        // Si el evento ya se lanzó, ejecutar el método de inmediato
+        if (completada)
+        {
+            metodo.Invoke();
+        }
+    }
     public static void LanzarCalidadDelAireServiceReadyEvent()
     {
+        completada = true;
         CalidadDelAireServiceReady?.Invoke();
     }
     #endregion
