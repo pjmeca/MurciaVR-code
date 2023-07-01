@@ -51,6 +51,9 @@ public class Ubicaciones : MonoBehaviour
 
     void Start()
     {
+        DataHolder dataHolder = FindObjectOfType<DataHolder>();
+        Ubicacion = dataHolder.UbicacionInicial;
+
         ActualizarUbicacion();
     }
 

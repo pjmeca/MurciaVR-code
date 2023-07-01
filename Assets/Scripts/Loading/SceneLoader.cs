@@ -21,18 +21,16 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator CargarMurcia(Ubicaciones.UbicacionesEnum ubicacion = Ubicaciones.UbicacionesEnum.Catedral)
     {
         Eventos.LanzarLoadingEvent();
-        var nuevaEscena = SceneManager.LoadSceneAsync("Murcia", LoadSceneMode.Single);
 
-        nuevaEscena.completed += (operation) =>
-        {
-            var Murcia = GameObject.Find("Murcia");
-            Murcia.GetComponent<Ubicaciones>().Ubicacion = ubicacion;
-        };
+        DataHolder dataHolder = FindObjectOfType<DataHolder>();
+        dataHolder.UbicacionInicial = ubicacion;
+
+        var nuevaEscena = SceneManager.LoadSceneAsync("Murcia", LoadSceneMode.Single);
 
         while (!nuevaEscena.isDone)
         {
             yield return null;
-        }        
+        }
     }
 
     /// <summary>
