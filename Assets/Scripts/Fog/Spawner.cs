@@ -5,7 +5,7 @@ public class Spawner : MonoBehaviour
 {
     [Inject]
     private readonly GameObject Jugador;
-    private ParticleSystem _particleSystem;
+    private Fog niebla;
 
     /// <summary>
     /// Distancia a partir de la cual deja de reproducirse el sistema de partículas.
@@ -14,7 +14,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        _particleSystem = gameObject.GetComponent<ParticleSystem>();
+        niebla = gameObject.GetComponent<Fog>();
     }
 
     void Update()
@@ -25,18 +25,12 @@ public class Spawner : MonoBehaviour
         // Si el jugador está a más de cierta distancia, parar el sistema de partículas
         if (distancia > DISTANCE_LIMIT)
         {
-            if(!_particleSystem.isStopped)
-            {
-                _particleSystem.Stop();
-            }                
+            niebla.Visible = false;
         }
         // Si está a menos, comprobar si el sistema de partículas se está reproduciendo y, si no, darle al play
         else
         {
-            if (!_particleSystem.isPlaying)
-            {
-                _particleSystem.Play();
-            }
+            niebla.Visible = true;
         }
     }
 }

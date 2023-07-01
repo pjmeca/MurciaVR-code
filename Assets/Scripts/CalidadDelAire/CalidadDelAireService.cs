@@ -16,6 +16,8 @@ using UnityEngine.Networking;
 /// </summary>
 public interface ICalidadDelAireService
 {
+    bool Ready { get; }
+
     /// <summary>
     /// Devuelve la calidad del aire de una ubicación.
     /// </summary>
@@ -31,6 +33,7 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
     /// Instancia Singleton del servicio.
     /// </summary>
     public static readonly CalidadDelAireCARMService Instance = new();
+    public bool Ready { get; private set; } = false;
 
     string URL_CARM = "https://sinqlair.carm.es/calidadaire/obtener_datos.aspx?tipo=tablaEstaciones";
 
@@ -156,6 +159,7 @@ public sealed class CalidadDelAireCARMService : ICalidadDelAireService
             callback(json);
         }
 
+        Ready = true;
         Eventos.LanzarCalidadDelAireServiceReadyEvent();
     }
 

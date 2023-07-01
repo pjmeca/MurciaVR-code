@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -84,6 +85,13 @@ public class CalidadDelAire
         }
     }
     public float[] Concentraciones {  get; private set; }
+    public bool Cleaned 
+    { 
+        get
+        {
+            return Concentraciones.ToList().All(x => x == 0);
+        }
+    }
     #endregion
 
     #endregion
@@ -256,7 +264,7 @@ public class CalidadDelAire
         if ((nivelBanda+1) == BANDAS_CONCENTRACION.GetLength(0))
             return 1f;
 
-        var resultado = Utils.Remap(Concentraciones[bandaElegida], BANDAS_CONCENTRACION[nivelBanda, bandaElegida], BANDAS_CONCENTRACION[nivelBanda+1, bandaElegida], 0f, 1f);
+        var resultado = Utils.Remap(Concentraciones[bandaElegida], BANDAS_CONCENTRACION[nivelBanda, bandaElegida], BANDAS_CONCENTRACION[nivelBanda+1, bandaElegida], 0.1f, 1f);
 
         return resultado;
     }

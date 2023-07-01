@@ -48,6 +48,8 @@ public class Fog : MonoBehaviour
     public CalidadDelAire Calidad;
     public CalidadDelAire.Indices Indice;
 
+    public bool Visible = false;
+
     public ParticleSystem.MinMaxGradient Gradiente
     {
         get
@@ -68,9 +70,11 @@ public class Fog : MonoBehaviour
 
         INITIAL_RADIUS = _sphereCollider.radius;
 
+        // Establecemos una calidad por defecto (importante hacerlo antes por si el servicio ya ha cargado)
+        Calidad = new();
+
         // Para obtener la calidad del aire hay que esperar a que el servicio se haya inicializado
         Eventos.SuscribirseCalidadDelAireServiceReadyEvent(DeferredStart);
-        Calidad = new();
     }
 
     private void DeferredStart()
@@ -88,6 +92,13 @@ public class Fog : MonoBehaviour
 
     public void Update()
     {
+        // Si está limpio, se destruye
+        if (calidadDelAireService.Ready && Calidad.Cleaned && _particleSystem.isStopped)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         // Comprobar si se ha cambiado el índice (desde el Inspector)
         Calidad.Indice = Indice;
         Indice = Calidad.Indice;
@@ -118,16 +129,20 @@ public class Fog : MonoBehaviour
     /// </summary>
     private void UpdateSize()
     {
-        float porcentajeContaminacion = Calidad.ContaminacionEnIndice();
-
-        if (porcentajeContaminacion == 0)
+        if (!Visible || Calidad.Cleaned)
         {
-            _particleSystem.Stop();
+            if (!_particleSystem.isStopped)
+            {
+                _particleSystem.Stop();
+            }
+            return;
         }
-        else if (_particleSystem.isStopped)
+        else if (Visible && _particleSystem.isStopped && !Calidad.Cleaned)
         {
             _particleSystem.Play();
         }
+
+        float porcentajeContaminacion = Calidad.ContaminacionEnIndice();
 
         var shape = _particleSystem.shape;
         shape.scale = new Vector3(
@@ -178,11 +193,24 @@ public class Fog : MonoBehaviour
     /// <summary>
     /// Limpia la nube de contaminación, reduciendo tamaño y color en la siguiente iteración
     /// </summary>
-    [ButtonInvoke("Limpiar")]
+    [ButtonInvoke(nameof(Limpiar))]
     public bool testLimpiar;
     public void Limpiar()
     {
         Calidad.Limpiar();
+    }
+
+    /// <summary>
+    /// Limpia totalmente la nube de contaminación (Calidad = 0)
+    /// </summary>
+    [ButtonInvoke(nameof(LimpiarTotalmente))]
+    public bool testLimpiarTotalmente;
+    public void LimpiarTotalmente()
+    {
+        while (!Calidad.Cleaned)
+        {
+            Limpiar();
+        }
     }
     #endregion
 }
