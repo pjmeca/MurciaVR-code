@@ -43,7 +43,7 @@ public class CalidadDelAire
         /*Extremadamente desfavorable*/{1250,1000, 1200, 800,   800},
     };
 
-    public static readonly float SPEED_LIMPIEZA = 500f;
+    public static readonly float SPEED_LIMPIEZA = 50f;
     #endregion
 
     #region DE OBJETO
@@ -239,16 +239,17 @@ public class CalidadDelAire
             float diferencia = 0;
             int banda = 0;
             for (int i=0; i < BANDAS_CONCENTRACION.GetLength(0); i++)
-            {                
+            {
                 float resta = Concentraciones[j] - BANDAS_CONCENTRACION[i, j];
 
                 // Si es negativa -> fin bucle interno
                 if (resta < 0)
+                {
+                    // Si esta es positiva -> actualizar diferencia                
+                    diferencia = Mathf.Abs(resta);
+                    banda = i;
                     break;
-
-                // Si esta es positiva -> actualizar diferencia                
-                diferencia = resta;
-                banda = i;
+                }                                
             }
 
             // Si es mayor que la maxDiferencia, actualizar
@@ -261,10 +262,9 @@ public class CalidadDelAire
         }
 
         // Se sale de la escala
-        if ((nivelBanda+1) == BANDAS_CONCENTRACION.GetLength(0))
-            return 1f;
+        int valorInferior = nivelBanda == 0 ? 0 : BANDAS_CONCENTRACION[nivelBanda - 1, bandaElegida];
 
-        var resultado = Utils.Remap(Concentraciones[bandaElegida], BANDAS_CONCENTRACION[nivelBanda, bandaElegida], BANDAS_CONCENTRACION[nivelBanda+1, bandaElegida], 0.1f, 1f);
+        var resultado = Utils.Remap(Concentraciones[bandaElegida], valorInferior, BANDAS_CONCENTRACION[nivelBanda, bandaElegida], 0f, 1f);
 
         return resultado;
     }
@@ -278,19 +278,13 @@ public class CalidadDelAire
         if (Concentraciones == null)
             return;
 
-        // Restar de manera proporcional a la escala        
-        var resta = 100 * SPEED_LIMPIEZA      * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 0];
-        Concentraciones[0] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 0];
-        Concentraciones[1] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 1];
-        Concentraciones[2] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 2];
-        Concentraciones[3] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 3];
-        Concentraciones[4] -= 100 * SPEED_LIMPIEZA * Time.deltaTime / BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, 4];
-
-        // Asegurarse de que ningún valor sea negativo
-        Concentraciones[0] = Concentraciones[0] < 0 ? 0 : Concentraciones[0];
-        Concentraciones[1] = Concentraciones[1] < 0 ? 0 : Concentraciones[1];
-        Concentraciones[2] = Concentraciones[2] < 0 ? 0 : Concentraciones[2];
-        Concentraciones[3] = Concentraciones[3] < 0 ? 0 : Concentraciones[3];
-        Concentraciones[4] = Concentraciones[4] < 0 ? 0 : Concentraciones[4];
+        // Restar de manera proporcional a la escala
+        for (int i = 0; i < BANDAS_CONCENTRACION.GetLength(1); i++)
+        {
+            Concentraciones[i] -= SPEED_LIMPIEZA * Time.deltaTime * BANDAS_CONCENTRACION[BANDAS_CONCENTRACION.GetLength(0) - 1, i] / 10000;
+            
+            // Asegurarse de que ningún valor sea negativo
+            Concentraciones[i] = Concentraciones[i] < 0 ? 0 : Concentraciones[i];
+        }
     }
 }

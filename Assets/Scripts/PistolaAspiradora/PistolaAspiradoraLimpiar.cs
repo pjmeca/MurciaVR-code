@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -29,6 +30,12 @@ public class PistolaAspiradoraLimpiar : MonoBehaviour
     void Start()
     {
         CollidedFogs = new();
+    }
+
+    void Update()
+    {
+        // Eliminar de CollidedFogs las nieblas que se hayan destruido (limpiado completamente)
+        CollidedFogs.RemoveAll(x => x.IsDestroyed());
     }
 
     void OnTriggerEnter(Collider collider)

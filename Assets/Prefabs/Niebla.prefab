@@ -4858,4 +4858,6 @@ MonoBehaviour:
   ContaminacionO3: 400
   ContaminacionPM25: 0
   Indice: 0
+  Visible: 0
   testLimpiar: 0
+  testLimpiarTotalmente: 0

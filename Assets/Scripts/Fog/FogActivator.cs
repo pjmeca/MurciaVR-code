@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -24,13 +25,22 @@ public class FogActivator : MonoBehaviour
 
     private void Update()
     {
+        // Eliminar de CollidedFogs las nieblas que se hayan destruido (limpiado completamente)
+        CollidedFogs.RemoveAll(x => x.IsDestroyed());
+
         if (CollidedFogs.Count > 0)
         {
             // La niebla puede haber cambiado de color
             GameObject niebla = CollidedFogs.Last();
 
             UpdateColor(niebla);
-        }       
+        } else
+        {
+            if (!ps.isStopped)
+            {
+                ps.Stop();
+            }
+        }
     }
 
     void OnTriggerEnter(Collider collider)
@@ -60,7 +70,8 @@ public class FogActivator : MonoBehaviour
             // Si no hay más nieblas, se para
             if (CollidedFogs.Count == 0)
             {
-                ps.Stop();
+                if (!ps.isStopped)
+                    ps.Stop();
             } 
             // Si aún quedan nieblas, se actualiza el color
             else

@@ -146,9 +146,9 @@ public class Fog : MonoBehaviour
 
         var shape = _particleSystem.shape;
         shape.scale = new Vector3(
-            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].x, _scales[(int)Calidad.Indice].x),
-            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].y, _scales[(int)Calidad.Indice].y),
-            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].z, _scales[(int)Calidad.Indice].z)
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0.3f : _scales[(int)Calidad.Indice - 1].x, _scales[(int)Calidad.Indice].x),
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0.3f : _scales[(int)Calidad.Indice - 1].y, _scales[(int)Calidad.Indice].y),
+            Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0.3f : _scales[(int)Calidad.Indice - 1].z, _scales[(int)Calidad.Indice].z)
         );
         var emission = _particleSystem.emission;
         var rateOverTime = emission.rateOverTime;
@@ -156,7 +156,7 @@ public class Fog : MonoBehaviour
         emission.rateOverTime = rateOverTime;
 
         // Actualizar también el tamaño del collider
-        _sphereCollider.radius = INITIAL_RADIUS * Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0 : _scales[(int)Calidad.Indice - 1].x, _scales[(int)Calidad.Indice].x);
+        _sphereCollider.radius = INITIAL_RADIUS * Utils.RelativeToRealValue(porcentajeContaminacion, Calidad.Indice == 0 ? 0.7f : _scales[(int)Calidad.Indice - 1].x, _scales[(int)Calidad.Indice].x);
     }
 
     /// <summary>
