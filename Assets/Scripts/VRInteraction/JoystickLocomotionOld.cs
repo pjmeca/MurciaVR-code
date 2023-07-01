@@ -46,22 +46,4 @@ public class JoystickLocomotionOld : MonoBehaviour
 
         player.transform.Rotate(speed * Time.deltaTime * new Vector3(0, joystickAxis.x, 0), Space.World);
     }
-
-    /// <summary>
-    /// Comprueba si se está pulsando el gatillo con o sin mando.
-    /// </summary>
-    public bool IsGatilloTriggered()
-    {
-        var hand = gameObject.GetComponentInChildren<OVRHand>();
-        bool isIndexFingerPinching = hand.GetFingerPinchStrength(OVRHand.HandFinger.Index) > 0 || hand.GetFingerPinchStrength(OVRHand.HandFinger.Index) > 0;
-        if (isIndexFingerPinching)
-            return true;
-
-        if (gameObject.name.Equals("LeftHandAnchor"))
-            return OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch);
-        if (gameObject.name.Equals("RightHandAnchor"))
-            return OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch);        
-
-        return false;
-    }
 }
