@@ -1,0 +1,56 @@
+.gitattributes
+Planificación.xlsx
+MurciaVR.lnk
+*.mp4
+*.cache
+*.csproj
+*.sln
+.vsconfig
+*.log
+Library
+Temp
+.vs
+.vscode
+*.blend1
+
+# Para que no suba la clave de la API de Bing Maps
+MapSessionConfig.txt
+
+# Zenject
+Proyecto Unity/Assets/Plugins/Zenject
+
+Modelos/PistolaAspiradora/Textures/brushed_concrete_03_1k.blend/brushed_concrete_03_1k.blend
+Modelos/PistolaAspiradora/Textures/leather_red_03_1k.blend/leather_red_03_1k.blend
+
+# Carpetas de Unity
+Proyecto Unity/Build
+Proyecto Unity/Library
+Proyecto Unity/Logs
+
+# Documento
+Documento/bibliografia/bibliografia.bib.sav
+Documento/*.log
+Documento/*.aux
+Documento/*.dvi
+Documento/*.lof
+Documento/*.lot
+Documento/*.bit
+Documento/*.idx
+Documento/*.glo
+Documento/*.bbl
+Documento/*.bcf
+Documento/*.ilg
+Documento/*.toc
+Documento/*.ind
+Documento/*.out
+Documento/*.blg
+Documento/*.fdb_latexmk
+Documento/*.fls
+Documento/*.run.xml
+Documento/*.synctex.gz
+Documento/*.listing
+Documento/*.acn
+Documento/*.ist
+Documento/*.lol
+
+Recursos/Modelos/Titulo/MurciaVR.blend
